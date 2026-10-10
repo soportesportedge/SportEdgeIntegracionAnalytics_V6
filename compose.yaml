@@ -1,0 +1,127 @@
+name: sportedge-v6
+x-runtime: &runtime
+  build: .
+  image: sportedge-integration-v6:1.0.0
+  init: true
+  restart: unless-stopped
+  cpus: 0.25
+  mem_limit: 192m
+  pids_limit: 64
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  tmpfs: ["/tmp:size=16m,mode=1777"]
+  environment: &environment
+    V6_DATABASE_URL: postgresql://v6@v6-db:5432/sportedge_v6
+    V6_DB_PASSWORD_FILE: /run/secrets/db_password
+    V6_INTEGRATION_API_KEY_FILE: /run/secrets/integration_api_key
+    V6_MODEL_API_KEY_FILE: /run/secrets/model_api_key
+    V6_MODEL_URL: http://analytics:8788
+    V6_DB_POOL_SIZE: "2"
+  secrets: [db_password,integration_api_key,model_api_key]
+  depends_on:
+    migrate: {condition: service_completed_successfully}
+  logging:
+    driver: json-file
+    options: {max-size: "10m", max-file: "3"}
+
+services:
+  v6-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    cpus: 0.5
+    mem_limit: 512m
+    pids_limit: 128
+    environment:
+      POSTGRES_USER: v6
+      POSTGRES_DB: sportedge_v6
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    volumes: [v6_data:/var/lib/postgresql/data]
+    ports: ["127.0.0.1:15436:5432"]
+    command: [postgres,-c,shared_buffers=64MB,-c,max_connections=24,-c,work_mem=2MB,-c,maintenance_work_mem=32MB]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U v6 -d sportedge_v6"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+  migrate:
+    <<: *runtime
+    restart: "no"
+    command: [python,-m,integration.migrate]
+    depends_on:
+      v6-db: {condition: service_healthy}
+  analytics:
+    build:
+      context: ${V6_ANALYTICS_CONTEXT:-../SportEdgeAnalyticsV6}
+    image: sportedge-analytics-v6:1.0.0
+    init: true
+    restart: unless-stopped
+    cpus: 1.0
+    mem_limit: 1g
+    pids_limit: 128
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:size=64m,mode=1777"]
+    environment:
+      V6_API_KEY_FILE: /run/secrets/model_api_key
+    secrets: [model_api_key]
+    ports: ["127.0.0.1:8790:8788"]
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+  api:
+    <<: *runtime
+    ports: ["127.0.0.1:8791:8791"]
+    healthcheck:
+      test: [CMD,python,-c,"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8791/health/ready',timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+  inference-worker:
+    <<: *runtime
+    command: [python,-m,integration.inference]
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+      analytics: {condition: service_healthy}
+  telegram-worker:
+    <<: *runtime
+    profiles: [telegram]
+    command: [python,-m,integration.telegram]
+    environment:
+      <<: *environment
+      V6_TELEGRAM_ENABLED: ${V6_TELEGRAM_ENABLED:-false}
+      V6_TELEGRAM_BOT_TOKEN_FILE: /run/secrets/telegram_bot_token
+      V6_TELEGRAM_CHAT_ID_FILE: /run/secrets/telegram_chat_id
+    secrets: [db_password,integration_api_key,model_api_key,telegram_bot_token,telegram_chat_id]
+  collector:
+    <<: *runtime
+    profiles: [collector]
+    command: [python,-m,integration.collector]
+    environment:
+      <<: *environment
+      V6_COLLECTOR_ENABLED: "true"
+      V6_SOURCE_DATABASE_URL_FILE: /run/secrets/source_database_url
+      V6_SOURCE_POLL_SECONDS: "5"
+      V6_SOURCE_BATCH_SIZE: "10"
+      V6_SOURCE_OVERLAP_IDS: "128"
+    secrets: [db_password,integration_api_key,model_api_key,source_database_url]
+    # Separate source connection through host.docker.internal. No V2 network membership.
+    extra_hosts: ["host.docker.internal:host-gateway"]
+
+volumes:
+  v6_data:
+networks:
+  default:
+    name: sportedge_v6
+secrets:
+  db_password: {file: ./secrets/db_password.txt}
+  integration_api_key: {file: ./secrets/integration_api_key.txt}
+  model_api_key: {file: ./secrets/model_api_key.txt}
+  telegram_bot_token: {file: ./secrets/telegram_bot_token.txt}
+  telegram_chat_id: {file: ./secrets/telegram_chat_id.txt}
+  source_database_url: {file: ./secrets/source_database_url.txt}

@@ -1,0 +1,24 @@
+{
+  "checks": {
+    "ready_8790": true,
+    "ready_8791": true,
+    "async_registration_inference_persistence": true,
+    "sync_registration_inference_persistence": true,
+    "seven_linux_models_callable": true,
+    "seven_linux_scores_match_original_pipeline": true
+  },
+  "benchmarks": {
+    "async_acceptance_p50_ms": 56.44810013473034,
+    "async_acceptance_p95_ms": 72.92059995234013
+  },
+  "model_scores": {
+    "logistic": 0.24294109225816063,
+    "extra_trees": 0.1498410301493234,
+    "random_forest": 0.30132725327835497,
+    "hist_gradient_boosting": 0.35002739803985905,
+    "xgboost": 0.321156769990921,
+    "catboost": 0.17334801643590225,
+    "ensemble": 0.325677325659107
+  },
+  "passed": true
+}

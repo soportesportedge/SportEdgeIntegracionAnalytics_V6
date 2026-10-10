@@ -1,0 +1,46 @@
+{
+  "checked_at": "2026-10-10T18:56:59Z",
+  "checks": {
+    "accepted_and_preserved_without_model": true,
+    "recovered_and_completed_after_restart": true,
+    "physical_model_vector_persisted": true,
+    "v2_containers_not_recreated_or_restarted": true
+  },
+  "v2_health_before": {
+    "status": "ok",
+    "app_env": "local",
+    "checks": {
+      "postgresql": "ok",
+      "redis": "ok",
+      "mongodb": "ok"
+    }
+  },
+  "acceptance_while_model_stopped_ms": 81.188,
+  "invocation_id": "be25a9d3-3bc1-4c5e-9268-0c51cc04f958",
+  "v2_health_while_model_stopped": {
+    "status": "ok",
+    "app_env": "local",
+    "checks": {
+      "postgresql": "ok",
+      "redis": "ok",
+      "mongodb": "ok"
+    }
+  },
+  "v2_health_after": {
+    "status": "ok",
+    "app_env": "local",
+    "checks": {
+      "postgresql": "ok",
+      "redis": "ok",
+      "mongodb": "ok"
+    }
+  },
+  "v6_resources": [
+    "sportedge-v6-analytics-1 | 0.25% | 120.8MiB / 1GiB",
+    "sportedge-v6-api-1 | 0.25% | 38.57MiB / 192MiB",
+    "sportedge-v6-v6-db-1 | 0.39% | 60.05MiB / 512MiB",
+    "sportedge-v6-inference-worker-1 | 0.20% | 35.47MiB / 192MiB",
+    "sportedge-v6-telegram-worker-1 | 0.24% | 26.44MiB / 192MiB"
+  ],
+  "passed": true
+}

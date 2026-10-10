@@ -1,0 +1,27 @@
+name: Integration V6 checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: v6
+          POSTGRES_PASSWORD: ci-test-password
+          POSTGRES_DB: sportedge_v6_test
+        ports: ["5432:5432"]
+        options: --health-cmd "pg_isready -U v6 -d sportedge_v6_test" --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      V6_DATABASE_URL: postgresql://v6@127.0.0.1:5432/sportedge_v6_test
+      V6_DB_PASSWORD: ci-test-password
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip}
+      - run: pip install -r requirements.txt pytest==9.0.3
+      - run: python -m integration.migrate
+      - run: python -m pytest tests -q
+      - run: docker build -t sportedge-integration-v6:ci .

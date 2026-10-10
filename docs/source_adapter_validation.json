@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "sample_snapshots": 5,
+  "source_cells_checked": 1105,
+  "differences": [],
+  "planning_ms": 30.527,
+  "execution_ms": 104.483,
+  "source_timeout_ms": 1500,
+  "source_rows_normalized_bound": 15,
+  "source_write_operations": 0
+}

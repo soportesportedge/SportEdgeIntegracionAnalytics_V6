@@ -1,0 +1,1408 @@
+{
+  "version": "v6_precision_20261010",
+  "predictors": [
+    "league_id",
+    "cluster",
+    "snapshot_minute",
+    "home_score",
+    "away_score",
+    "dif_score",
+    "home_possession",
+    "away_possession",
+    "dif_possession",
+    "home_shots_total",
+    "away_shots_total",
+    "dif_shots_total",
+    "home_shots_on_target",
+    "away_shots_on_target",
+    "dif_shots_on_target",
+    "home_dangerous_attacks",
+    "away_dangerous_attacks",
+    "dif_dangerous_attacks",
+    "home_corners",
+    "away_corners",
+    "dif_corners",
+    "home_fouls",
+    "away_fouls",
+    "dif_fauls",
+    "home_yellow_cards",
+    "away_yellow_cards",
+    "dif_yellow_cards",
+    "home_red_cards",
+    "away_red_cards",
+    "dif_red_cards",
+    "home_offsides",
+    "away_offsides",
+    "dif_offsides",
+    "home_saves",
+    "away_saves",
+    "dif_saves",
+    "home_attacks",
+    "away_attacks",
+    "dif_attacks",
+    "home_shots_off_target",
+    "away_shots_off_target",
+    "dif_shots_off_target",
+    "h2h_total_matches",
+    "h2h_home_wins",
+    "h2h_draw",
+    "h2h_away_wins",
+    "dif_h2h_wins",
+    "h2h_home_goals",
+    "h2h_away_goals",
+    "dif_h2h_goal",
+    "position_home",
+    "points_home",
+    "goal_diff_home",
+    "goals_against_home",
+    "goals_for_home",
+    "wins_home",
+    "draws_home",
+    "losses_home",
+    "position_away",
+    "points_away",
+    "goal_diff_away",
+    "goals_against_away",
+    "goals_for_away",
+    "wins_away",
+    "draws_away",
+    "losses_away",
+    "dif_position",
+    "home_score_increased_prev_10m",
+    "away_score_increased_prev_10m",
+    "home_shots_insidebox",
+    "away_shots_insidebox",
+    "dif_shots_insidebox",
+    "home_shots_outsidebox",
+    "away_shots_outsidebox",
+    "dif_shots_outsidebox",
+    "home_shots_blocked",
+    "away_shots_blocked",
+    "dif_shots_blocked",
+    "home_key_passes",
+    "away_key_passes",
+    "dif_key_passes",
+    "home_big_chances_created",
+    "away_big_chances_created",
+    "dif_big_chances_created",
+    "home_big_chances_missed",
+    "away_big_chances_missed",
+    "dif_big_chances_missed",
+    "home_substitutions",
+    "away_substitutions",
+    "dif_substitutions",
+    "home_passes",
+    "away_passes",
+    "dif_passes",
+    "home_passes_accuracy_pct",
+    "away_passes_accuracy_pct",
+    "dif_passes_accuracy_pct",
+    "home_crosses_total",
+    "away_crosses_total",
+    "dif_crosses_total",
+    "home_crosses_accurate",
+    "away_crosses_accurate",
+    "dif_crosses_accurate",
+    "home_interceptions",
+    "away_interceptions",
+    "dif_interceptions",
+    "home_tackles",
+    "away_tackles",
+    "dif_tackles",
+    "home_duels_won",
+    "away_duels_won",
+    "dif_duels_won",
+    "home_shots_insidebox_share",
+    "home_shots_on_target_share",
+    "home_crosses_accuracy_share",
+    "away_shots_insidebox_share",
+    "away_shots_on_target_share",
+    "away_crosses_accuracy_share",
+    "games_played_home",
+    "points_per_game_home",
+    "goals_for_per_game_home",
+    "goals_against_per_game_home",
+    "win_rate_home",
+    "games_played_away",
+    "points_per_game_away",
+    "goals_for_per_game_away",
+    "goals_against_per_game_away",
+    "win_rate_away",
+    "h2h_home_win_rate",
+    "h2h_away_win_rate",
+    "h2h_draw_rate",
+    "h2h_goals_per_match",
+    "total_goals_now",
+    "abs_score_diff",
+    "is_home_losing",
+    "is_away_losing",
+    "is_draw_now",
+    "home_shots_total_last_5m",
+    "away_shots_total_last_5m",
+    "dif_shots_total_last_5m",
+    "home_shots_on_target_last_5m",
+    "away_shots_on_target_last_5m",
+    "dif_shots_on_target_last_5m",
+    "home_shots_insidebox_last_5m",
+    "away_shots_insidebox_last_5m",
+    "dif_shots_insidebox_last_5m",
+    "home_dangerous_attacks_last_5m",
+    "away_dangerous_attacks_last_5m",
+    "dif_dangerous_attacks_last_5m",
+    "home_corners_last_5m",
+    "away_corners_last_5m",
+    "dif_corners_last_5m",
+    "trailing_team_shots_on_target_last_5m",
+    "home_shots_total_last_10m",
+    "away_shots_total_last_10m",
+    "dif_shots_total_last_10m",
+    "home_shots_on_target_last_10m",
+    "away_shots_on_target_last_10m",
+    "dif_shots_on_target_last_10m",
+    "home_shots_insidebox_last_10m",
+    "away_shots_insidebox_last_10m",
+    "dif_shots_insidebox_last_10m",
+    "home_dangerous_attacks_last_10m",
+    "away_dangerous_attacks_last_10m",
+    "dif_dangerous_attacks_last_10m",
+    "home_corners_last_10m",
+    "away_corners_last_10m",
+    "dif_corners_last_10m",
+    "trailing_team_shots_on_target_last_10m",
+    "goals_observed_since_70",
+    "goals_observed_last_10m",
+    "minutes_since_last_goal_since_70",
+    "var_events_last_10m",
+    "home_substitutions_since_70",
+    "home_substitutions_last_10m",
+    "home_dismissals_since_70",
+    "minutes_since_home_dismissal_since_70",
+    "away_substitutions_since_70",
+    "away_substitutions_last_10m",
+    "away_dismissals_since_70",
+    "minutes_since_away_dismissal_since_70",
+    "minutes_to_90",
+    "second_half_time_added",
+    "announced_minutes_remaining"
+  ],
+  "families": [
+    "logistic",
+    "extra_trees",
+    "random_forest",
+    "hist_gradient_boosting",
+    "xgboost",
+    "catboost",
+    "ensemble"
+  ],
+  "target_columns": [
+    "home_score_to_increase",
+    "away_score_to_increase",
+    "home_result_to_win",
+    "result_to_draw",
+    "away_result_to_win"
+  ],
+  "source_columns": [
+    {
+      "name": "starting_at",
+      "sql_type": "timestamp with time zone"
+    },
+    {
+      "name": "captured_at",
+      "sql_type": "timestamp with time zone"
+    },
+    {
+      "name": "id",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "league_id",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_team_id",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_team_name",
+      "sql_type": "text"
+    },
+    {
+      "name": "away_team_id",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_team_name",
+      "sql_type": "text"
+    },
+    {
+      "name": "cluster",
+      "sql_type": "text"
+    },
+    {
+      "name": "snapshot_minute",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_score",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_score",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_score",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_possession",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "away_possession",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "dif_possession",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "home_shots_total",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_shots_total",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_shots_total",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_shots_on_target",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_shots_on_target",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_shots_on_target",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_dangerous_attacks",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_dangerous_attacks",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_dangerous_attacks",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_corners",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_corners",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_corners",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_fouls",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_fouls",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_fauls",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_yellow_cards",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_yellow_cards",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_yellow_cards",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_red_cards",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_red_cards",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_red_cards",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_offsides",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_offsides",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_offsides",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_saves",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_saves",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_saves",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_attacks",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_attacks",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_attacks",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_shots_off_target",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_shots_off_target",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_shots_off_target",
+      "sql_type": "integer"
+    },
+    {
+      "name": "h2h_total_matches",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "h2h_home_wins",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "h2h_draw",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "h2h_away_wins",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "dif_h2h_wins",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "h2h_home_goals",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "h2h_away_goals",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "dif_h2h_goal",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "position_home",
+      "sql_type": "integer"
+    },
+    {
+      "name": "points_home",
+      "sql_type": "integer"
+    },
+    {
+      "name": "goal_diff_home",
+      "sql_type": "integer"
+    },
+    {
+      "name": "goals_against_home",
+      "sql_type": "integer"
+    },
+    {
+      "name": "goals_for_home",
+      "sql_type": "integer"
+    },
+    {
+      "name": "wins_home",
+      "sql_type": "integer"
+    },
+    {
+      "name": "draws_home",
+      "sql_type": "integer"
+    },
+    {
+      "name": "losses_home",
+      "sql_type": "integer"
+    },
+    {
+      "name": "position_away",
+      "sql_type": "integer"
+    },
+    {
+      "name": "points_away",
+      "sql_type": "integer"
+    },
+    {
+      "name": "goal_diff_away",
+      "sql_type": "integer"
+    },
+    {
+      "name": "goals_against_away",
+      "sql_type": "integer"
+    },
+    {
+      "name": "goals_for_away",
+      "sql_type": "integer"
+    },
+    {
+      "name": "wins_away",
+      "sql_type": "integer"
+    },
+    {
+      "name": "draws_away",
+      "sql_type": "integer"
+    },
+    {
+      "name": "losses_away",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_position",
+      "sql_type": "integer"
+    },
+    {
+      "name": "market_id",
+      "sql_type": "integer"
+    },
+    {
+      "name": "odds_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "odds_draw",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "odds_away",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "implied_prob_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "implied_prob_draw",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "implied_prob_away",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "home_score_increased_prev_10m",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "away_score_increased_prev_10m",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "match_centre_snapshot_id",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "season_id",
+      "sql_type": "integer"
+    },
+    {
+      "name": "state_developer_name",
+      "sql_type": "text"
+    },
+    {
+      "name": "is_postmatch_snapshot",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "is_live_training_snapshot",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "coverage_status",
+      "sql_type": "text"
+    },
+    {
+      "name": "h2h_snapshot_id",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "h2h_age_seconds",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "has_h2h",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "home_shots_insidebox",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_shots_insidebox",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_shots_insidebox",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_shots_outsidebox",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_shots_outsidebox",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_shots_outsidebox",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_shots_blocked",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_shots_blocked",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_shots_blocked",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_key_passes",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_key_passes",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_key_passes",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_big_chances_created",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_big_chances_created",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_big_chances_created",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_big_chances_missed",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_big_chances_missed",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_big_chances_missed",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_substitutions",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_substitutions",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_substitutions",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_passes",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_passes",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_passes",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_passes_accuracy_pct",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "away_passes_accuracy_pct",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "dif_passes_accuracy_pct",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "home_crosses_total",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_crosses_total",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_crosses_total",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_crosses_accurate",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_crosses_accurate",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_crosses_accurate",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_interceptions",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_interceptions",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_interceptions",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_tackles",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_tackles",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_tackles",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_duels_won",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_duels_won",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_duels_won",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_shots_insidebox_share",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "home_shots_on_target_share",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "home_crosses_accuracy_share",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "away_shots_insidebox_share",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "away_shots_on_target_share",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "away_crosses_accuracy_share",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "games_played_home",
+      "sql_type": "integer"
+    },
+    {
+      "name": "points_per_game_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "goals_for_per_game_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "goals_against_per_game_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "win_rate_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "standings_age_seconds_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "has_standings_home",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "games_played_away",
+      "sql_type": "integer"
+    },
+    {
+      "name": "points_per_game_away",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "goals_for_per_game_away",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "goals_against_per_game_away",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "win_rate_away",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "standings_age_seconds_away",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "has_standings_away",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "h2h_home_win_rate",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "h2h_away_win_rate",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "h2h_draw_rate",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "h2h_goals_per_match",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "total_goals_now",
+      "sql_type": "integer"
+    },
+    {
+      "name": "abs_score_diff",
+      "sql_type": "integer"
+    },
+    {
+      "name": "is_home_losing",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "is_away_losing",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "is_draw_now",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "has_current_score",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "has_score_history_10m",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "has_history_5m",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "history_capture_age_seconds_5m",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "counter_correction_5m",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "home_shots_total_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_shots_total_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_shots_total_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_shots_on_target_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_shots_on_target_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_shots_on_target_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_shots_insidebox_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_shots_insidebox_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_shots_insidebox_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_dangerous_attacks_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_dangerous_attacks_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_dangerous_attacks_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_corners_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_corners_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_corners_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "trailing_team_shots_on_target_last_5m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "has_history_10m",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "history_capture_age_seconds_10m",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "counter_correction_10m",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "home_shots_total_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_shots_total_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_shots_total_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_shots_on_target_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_shots_on_target_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_shots_on_target_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_shots_insidebox_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_shots_insidebox_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_shots_insidebox_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_dangerous_attacks_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_dangerous_attacks_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_dangerous_attacks_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "home_corners_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_corners_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "dif_corners_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "trailing_team_shots_on_target_last_10m",
+      "sql_type": "integer"
+    },
+    {
+      "name": "events_snapshot_available",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "goals_observed_since_70",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "goals_observed_last_10m",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "minutes_since_last_goal_since_70",
+      "sql_type": "integer"
+    },
+    {
+      "name": "var_events_last_10m",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "home_substitutions_since_70",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "home_substitutions_last_10m",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "home_dismissals_since_70",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "minutes_since_home_dismissal_since_70",
+      "sql_type": "integer"
+    },
+    {
+      "name": "away_substitutions_since_70",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "away_substitutions_last_10m",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "away_dismissals_since_70",
+      "sql_type": "bigint"
+    },
+    {
+      "name": "minutes_since_away_dismissal_since_70",
+      "sql_type": "integer"
+    },
+    {
+      "name": "minutes_to_90",
+      "sql_type": "integer"
+    },
+    {
+      "name": "second_half_time_added",
+      "sql_type": "integer"
+    },
+    {
+      "name": "announced_minutes_remaining",
+      "sql_type": "integer"
+    },
+    {
+      "name": "has_valid_odds",
+      "sql_type": "boolean"
+    },
+    {
+      "name": "odds_age_seconds",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "home_score_to_increase",
+      "sql_type": "boolean"
+    }
+  ],
+  "engineering_columns": [
+    {
+      "name": "eng_home_shots_total_per_min",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_shots_on_target_per_min",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_dangerous_attacks_per_min",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_attacks_per_min",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_corners_per_min",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_shot_accuracy",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_pressure",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_attack_efficiency",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_shots_total_per_min",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_shots_on_target_per_min",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_dangerous_attacks_per_min",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_attacks_per_min",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_corners_per_min",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_shot_accuracy",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_pressure",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_attack_efficiency",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_shots_total_share_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_shots_on_target_share_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_dangerous_attacks_share_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_attacks_share_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_corners_share_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_shots_insidebox_share_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_shot_accuracy_diff",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_pressure_diff",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_attack_efficiency_diff",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_points_per_game_diff",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_goals_for_per_game_diff",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_goals_against_per_game_diff",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_win_rate_diff",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_remaining_95",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_remaining_100",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_h2h_home_goal_share",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_shots_total_acceleration",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_shots_total_recent_vs_match",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_shots_on_target_acceleration",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_shots_on_target_recent_vs_match",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_shots_insidebox_acceleration",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_shots_insidebox_recent_vs_match",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_dangerous_attacks_acceleration",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_dangerous_attacks_recent_vs_match",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_corners_acceleration",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_corners_recent_vs_match",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_pressure_5m",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_pressure_10m",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_box_quality_10m",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_shots_total_acceleration",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_shots_total_recent_vs_match",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_shots_on_target_acceleration",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_shots_on_target_recent_vs_match",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_shots_insidebox_acceleration",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_shots_insidebox_recent_vs_match",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_dangerous_attacks_acceleration",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_dangerous_attacks_recent_vs_match",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_corners_acceleration",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_corners_recent_vs_match",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_pressure_5m",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_pressure_10m",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_box_quality_10m",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_pressure_diff_5m",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_sot_share_home_5m",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_pressure_diff_10m",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_sot_share_home_10m",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_pressure_exposure",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_losing_pressure",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_draw_pressure",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_threat",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_home_unconverted_chances",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_pressure_exposure",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_losing_pressure",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_draw_pressure",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_threat",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_away_unconverted_chances",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_pressure_home_competing",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_threat_diff",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_attack_vs_defence_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_attack_vs_defence_away",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_red_advantage_home",
+      "sql_type": "double precision"
+    },
+    {
+      "name": "eng_substitution_diff_10m",
+      "sql_type": "double precision"
+    }
+  ]
+}

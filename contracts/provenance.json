@@ -1,0 +1,44 @@
+{
+  "source_sql_sha256": "d05943e4923b2e0e02cecb2e2f817e28b76104c511b12aa3040de028ff68abe2",
+  "model_registry": {
+    "version": "v6_precision_20261010",
+    "selected_family": "random_forest",
+    "models": {
+      "logistic": {
+        "file": "logistic.joblib",
+        "sha256": "22cd22a732cc5c904aafa69ce025f8cb05057f46d81db28416be7a8b1877c32d"
+      },
+      "extra_trees": {
+        "file": "extra_trees.joblib",
+        "sha256": "ce4a7612b810efc82acf836a12648566809ba3ba0e1db6edd8e361d230934993"
+      },
+      "random_forest": {
+        "file": "random_forest.joblib",
+        "sha256": "3ad3b6b2047aed63d5a5953a207caa60f22a13537d995729f16c94870e762e11"
+      },
+      "hist_gradient_boosting": {
+        "file": "hist_gradient_boosting.joblib",
+        "sha256": "7fb7a66ceb3d9d7e3f55ed1da13893bb021bac959321efdc1c738bedacc6b03a"
+      },
+      "xgboost": {
+        "file": "xgboost.joblib",
+        "sha256": "5087f5c65d5f2ee184dffb1fc9020fb4c88edd54bf088472d8c0d20ca7977167"
+      },
+      "catboost": {
+        "file": "catboost.joblib",
+        "sha256": "ab84270b1994134138b6ec822dc4063ed6cca090730354b40bf385fcc937c1ff"
+      },
+      "ensemble": {
+        "file": "ensemble.joblib",
+        "sha256": "1c7a64f88c8987ece44e9cef8706d6ddca1e33f0d135e524e1e8d2a58c29ad69"
+      }
+    }
+  },
+  "dictionary_sha256": "b73dfe3df750c8295f8862f94009027851fe17d097420d134f7aeea42674d860",
+  "adapter_changes": [
+    "scope target + exact 5/10 minute history by PK",
+    "correct only latest H2H per target",
+    "add league and logos",
+    "retain original causal normalization"
+  ]
+}
