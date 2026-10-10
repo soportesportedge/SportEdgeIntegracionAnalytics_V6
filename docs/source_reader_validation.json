@@ -1,0 +1,103 @@
+{
+  "checked_at": "2026-10-10T19:15:11.015897+00:00",
+  "checks": {
+    "dedicated_role": true,
+    "no_administrative_flags": true,
+    "connection_limit_two": true,
+    "select_exactly_seven_source_tables": true,
+    "no_table_write_privileges": true,
+    "no_source_schema_create": true,
+    "read_only_default": true,
+    "one_running_collector_source_session": true
+  },
+  "role": {
+    "rolname": "sportedge_v6_ro",
+    "rolsuper": false,
+    "rolcreatedb": false,
+    "rolcreaterole": false,
+    "rolreplication": false,
+    "rolinherit": false,
+    "rolconnlimit": 2
+  },
+  "settings": {
+    "default_transaction_read_only": "on",
+    "statement_timeout": "1500ms",
+    "lock_timeout": "100ms",
+    "idle_in_transaction_session_timeout": "5s",
+    "jit": "off"
+  },
+  "source_table_permissions": [
+    {
+      "relname": "fixtures",
+      "can_select": true,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false,
+      "can_truncate": false,
+      "can_trigger": false,
+      "can_references": false
+    },
+    {
+      "relname": "head_to_head_snapshots",
+      "can_select": true,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false,
+      "can_truncate": false,
+      "can_trigger": false,
+      "can_references": false
+    },
+    {
+      "relname": "leagues",
+      "can_select": true,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false,
+      "can_truncate": false,
+      "can_trigger": false,
+      "can_references": false
+    },
+    {
+      "relname": "match_centre_snapshots",
+      "can_select": true,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false,
+      "can_truncate": false,
+      "can_trigger": false,
+      "can_references": false
+    },
+    {
+      "relname": "odds_snapshots",
+      "can_select": true,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false,
+      "can_truncate": false,
+      "can_trigger": false,
+      "can_references": false
+    },
+    {
+      "relname": "standings_snapshots",
+      "can_select": true,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false,
+      "can_truncate": false,
+      "can_trigger": false,
+      "can_references": false
+    },
+    {
+      "relname": "teams",
+      "can_select": true,
+      "can_insert": false,
+      "can_update": false,
+      "can_delete": false,
+      "can_truncate": false,
+      "can_trigger": false,
+      "can_references": false
+    }
+  ],
+  "collector_source_sessions": 1,
+  "passed": true
+}

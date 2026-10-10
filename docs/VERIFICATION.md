@@ -20,7 +20,11 @@ Se generó un backup PostgreSQL en formato custom de la base nueva V6. Los respa
 
 ## Límites pendientes
 
-El recolector automático está preparado pero desactivado. No se creó `sportedge_v6_ro`: la revisión automática rechazó añadir ese permiso persistente en PostgreSQL V2 sin autorización explícita. Activarlo requiere esa autorización o una credencial de lectura ya autorizada. La API de invocación funciona de forma independiente mientras tanto.
+El usuario autorizó explícitamente crear `sportedge_v6_ro` el 10 de octubre de 2026. Se creó ese rol nuevo y se activó `sportedge-v6-collector-1`. La verificación confirmó SELECT sobre exactamente las siete tablas fuente, sin permisos de escritura ni administración, máximo dos conexiones, transacciones de lectura por defecto y tiempos acotados. El recolector mantiene una sola sesión fuente. La credencial permanece fuera de Git.
+
+Ya se completaron dos invocaciones reales: snapshots `103774` y `103783`, partido `19609847`, minutos 95 y 96, liga Major League Soccer. Cada registro conserva las 78 ingenierías y 171 campos del vector físico utilizado por Random Forest. Su score fue 0,1380438412; no generaron señales ni avisos Telegram. No se forzó un envío para comprobar la captura. El cursor quedó registrado en la base nueva.
+
+La salud profunda de V2 siguió OK después de activar el recolector; sus contenedores API, PostgreSQL y runner conservaron los mismos IDs y fechas de inicio. Se midieron 31,1 MiB de memoria en el recolector, dentro de su límite de 192 MiB. `source_reader_validation.json` documenta los permisos; `scripts/verify_source_reader.py --host 127.0.0.1` permite repetir esa comprobación desde el host local.
 
 El candidato conserva `research_only=true` y `actionable=false`: no alcanzó precisión >50% y recall >25% en evaluación histórica. El Random Forest predeterminado mantiene un score sin calibrar. Los mensajes explican esa limitación y no presentan la puntuación como probabilidad real validada.
 
