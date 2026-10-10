@@ -44,6 +44,8 @@ El worker usa `FOR UPDATE SKIP LOCKED`, lease de 60 segundos y token de propieda
 
 ## Telegram de pruebas V6
 
+La versión predeterminada de Random Forest es ahora `v6_precision_20261010_cal1`. El resultado registra score original, probabilidad ajustada, versión del calibrador, umbral equivalente y regla de decisión original. El integrador verifica SHA/versiones por familia. La calibración conserva la política de señales y su clave de deduplicación, evitando repetir avisos por actualizar solamente la escala probabilística. Telegram identifica el ajuste con datos históricos y mantiene el aviso experimental. [Comparación y protocolo](docs/CALIBRATION.md).
+
 El destino acordado es `-5538403637`, separado del chat actual. Configurar token y chat en los secretos correspondientes. Si se reutiliza el bot actual:
 
 ```powershell

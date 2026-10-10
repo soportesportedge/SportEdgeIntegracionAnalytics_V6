@@ -11,13 +11,22 @@ REGISTRY=json.loads((ROOT/'contracts'/'provenance.json').read_text())['model_reg
 
 def check_result(result,job):
     if not isinstance(result,dict) or result.get('research_only') is not True:raise ValueError('invalid_model_contract')
-    if result.get('family')!=job['family'] or result.get('model_version')!=repo.CONTRACT['version']:raise ValueError('unexpected_model_version')
+    expected_version=REGISTRY['models'][job['family']].get('model_version',repo.CONTRACT['version'])
+    if result.get('family')!=job['family'] or result.get('model_version')!=expected_version:raise ValueError('unexpected_model_version')
     if result.get('artifact_sha256')!=REGISTRY['models'][job['family']]['sha256']:raise ValueError('unexpected_model_artifact')
     if set(result.get('engineered_features',{}))!={x['name'] for x in repo.ENGINEERED}:raise ValueError('incomplete_engineering')
     if result.get('target')!='home_score_to_increase':raise ValueError('unexpected_target')
     p=result.get('probability')
     if result.get('eligible') and (p is None or not math.isfinite(float(p)) or not 0<=float(p)<=1):raise ValueError('invalid_probability')
     if not result.get('eligible') and p is not None:raise ValueError('probability_outside_live_horizon')
+    contract=REGISTRY['models'][job['family']]
+    if contract.get('decision_policy_version'):
+        if result.get('decision_policy_version')!=contract['decision_policy_version'] or result.get('decision_basis')!='raw_model_score':raise ValueError('unexpected_decision_policy')
+        if result.get('calibration_version')!=contract['calibration_version'] or result.get('decision_threshold')!=contract['raw_threshold']:raise ValueError('unexpected_calibration_policy')
+        raw=result.get('raw_model_score')
+        if result['eligible'] and (raw is None or not math.isfinite(float(raw)) or not 0<=float(raw)<=1):raise ValueError('invalid_raw_score')
+        expected_signal=bool(result['eligible'] and raw>=contract['raw_threshold'])
+        if result.get('signal') is not expected_signal:raise ValueError('signal_policy_mismatch')
 
 async def process_one(p, client, job_id=None):
     job=await repo.claim(p,job_id)

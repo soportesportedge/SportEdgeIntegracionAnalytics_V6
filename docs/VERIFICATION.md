@@ -26,6 +26,6 @@ Ya se completaron dos invocaciones reales: snapshots `103774` y `103783`, partid
 
 La salud profunda de V2 siguió OK después de activar el recolector; sus contenedores API, PostgreSQL y runner conservaron los mismos IDs y fechas de inicio. Se midieron 31,1 MiB de memoria en el recolector, dentro de su límite de 192 MiB. `source_reader_validation.json` documenta los permisos; `scripts/verify_source_reader.py --host 127.0.0.1` permite repetir esa comprobación desde el host local.
 
-El candidato conserva `research_only=true` y `actionable=false`: no alcanzó precisión >50% y recall >25% en evaluación histórica. El Random Forest predeterminado mantiene un score sin calibrar. Los mensajes explican esa limitación y no presentan la puntuación como probabilidad real validada.
+El candidato conserva `research_only=true` y `actionable=false`: no alcanzó precisión >50% y recall >25% en evaluación histórica. El Random Forest `v6_precision_20261010_cal1` conserva el score y la política de señales originales; añade una probabilidad ajustada con calibración histórica, con su método, versión y límites. [Verificación de calibración](CALIBRATION.md).
 
 Para independencia absoluta de recursos, usar una máquina separada y una réplica de lectura. En el host compartido se aplican límites de CPU/memoria, pools pequeños, un worker de inferencia, consultas incrementales acotadas y backpressure; no hay entrenamiento en los contenedores de servicio.

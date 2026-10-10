@@ -13,7 +13,7 @@ sys.path.insert(0,str(ROOT))
 from integration.database import pool
 from integration import repository as repo
 from integration import telegram
-from integration.inference import process_one
+from integration.inference import process_one,check_result,REGISTRY
 
 def snapshot():
     s=json.loads((ROOT/'tests'/'example_request.json').read_text())['snapshot']
@@ -87,6 +87,36 @@ def test_outbox_is_atomic_and_deduplicates_score_episode():
             assert await c.fetchval('SELECT count(*) FROM v6.telegram_outbox')==1
             assert await c.fetchval("SELECT count(*) FROM v6.match_centre_invocations WHERE status='completed'")==2
     run(case)
+
+def test_calibration_revision_does_not_duplicate_existing_score_episode():
+    async def case(p):
+        s=snapshot()
+        for n,version in enumerate(['v6_precision_20261010','v6_precision_20261010_cal1']):
+            job,_=await repo.submit(p,s,key='cal'+str(n));j=await repo.claim(p,job);r=result(j)
+            r['model_version']=version;r['decision_policy_version']='v6_precision_20261010'
+            await repo.complete(p,j,r,{'snapshot':s,'prediction':r})
+        async with p.acquire() as c:
+            assert await c.fetchval('SELECT count(*) FROM v6.telegram_outbox')==1
+            assert await c.fetchval("SELECT count(DISTINCT model_version) FROM v6.match_centre_invocations")==2
+    run(case)
+
+def test_calibrated_contract_enforces_frozen_signal_and_family_versions():
+    from uuid import uuid4
+    j={'invocation_id':uuid4(),'id':1,'family':'random_forest'}
+    r=result(j);spec=REGISTRY['models']['random_forest']
+    r.update(model_version=spec['model_version'],artifact_sha256=spec['sha256'],raw_model_score=.6,
+        probability=.42,signal=True,decision_policy_version=spec['decision_policy_version'],decision_basis='raw_model_score',
+        decision_threshold=spec['raw_threshold'],calibration_version=spec['calibration_version'])
+    check_result(r,j)
+    r['signal']=False
+    with pytest.raises(ValueError,match='signal_policy_mismatch'):check_result(r,j)
+    r['signal']=True;r['model_version']='v6_precision_20261010'
+    with pytest.raises(ValueError,match='unexpected_model_version'):check_result(r,j)
+
+def test_calibrated_telegram_text_keeps_experimental_context():
+    message=telegram.format_message({'snapshot':snapshot(),'prediction':{'probability':.42,'probability_status':'calibration_fitted','calibration_version':'cal1','threshold':.4}})
+    assert '42.0%' in message and '42 de cada 100' in message and 'datos históricos' in message
+    assert 'experimental' in message and 'umbral' not in message.lower()
 
 def test_inference_unavailable_preserves_durable_retry():
     async def case(p):

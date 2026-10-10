@@ -138,7 +138,8 @@ async def complete(p, job, result, telegram_payload=None):
         await c.execute('INSERT INTO v6.invocation_events(invocation_id,event,detail) VALUES ($1,$2,$3)',job['invocation_id'],'completed',{'artifact_sha256':result['artifact_sha256']})
         if telegram_payload:
             s=job['input_values']
-            notification_key=':'.join(str(v) for v in [s['id'],result['target'],result['model_version'],s['home_score'],s['away_score']])
+            policy=result.get('decision_policy_version',result['model_version'])
+            notification_key=':'.join(str(v) for v in [s['id'],result['target'],policy,s['home_score'],s['away_score']])
             await c.execute('''INSERT INTO v6.telegram_outbox(outbox_id,invocation_id,notification_key,payload)
                 VALUES ($1,$2,$3,$4) ON CONFLICT(notification_key) DO NOTHING''',uuid.uuid4(),job['invocation_id'],notification_key,telegram_payload)
     return True

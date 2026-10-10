@@ -1,36 +1,46 @@
 {
   "source_sql_sha256": "d05943e4923b2e0e02cecb2e2f817e28b76104c511b12aa3040de028ff68abe2",
   "model_registry": {
-    "version": "v6_precision_20261010",
+    "version": "v6_precision_20261010_cal1",
     "selected_family": "random_forest",
     "models": {
       "logistic": {
         "file": "logistic.joblib",
-        "sha256": "22cd22a732cc5c904aafa69ce025f8cb05057f46d81db28416be7a8b1877c32d"
+        "sha256": "22cd22a732cc5c904aafa69ce025f8cb05057f46d81db28416be7a8b1877c32d",
+        "model_version": "v6_precision_20261010"
       },
       "extra_trees": {
         "file": "extra_trees.joblib",
-        "sha256": "ce4a7612b810efc82acf836a12648566809ba3ba0e1db6edd8e361d230934993"
+        "sha256": "ce4a7612b810efc82acf836a12648566809ba3ba0e1db6edd8e361d230934993",
+        "model_version": "v6_precision_20261010"
       },
       "random_forest": {
         "file": "random_forest.joblib",
-        "sha256": "3ad3b6b2047aed63d5a5953a207caa60f22a13537d995729f16c94870e762e11"
+        "sha256": "e1f1d6415b10771488be80cc65bcfd631ebe3e05df72cfe3ea9fe42de46606ad",
+        "model_version": "v6_precision_20261010_cal1",
+        "decision_policy_version": "v6_precision_20261010",
+        "raw_threshold": 0.4983797123424291,
+        "calibration_version": "v6_rf_platt_minute_20261010_v1"
       },
       "hist_gradient_boosting": {
         "file": "hist_gradient_boosting.joblib",
-        "sha256": "7fb7a66ceb3d9d7e3f55ed1da13893bb021bac959321efdc1c738bedacc6b03a"
+        "sha256": "7fb7a66ceb3d9d7e3f55ed1da13893bb021bac959321efdc1c738bedacc6b03a",
+        "model_version": "v6_precision_20261010"
       },
       "xgboost": {
         "file": "xgboost.joblib",
-        "sha256": "5087f5c65d5f2ee184dffb1fc9020fb4c88edd54bf088472d8c0d20ca7977167"
+        "sha256": "5087f5c65d5f2ee184dffb1fc9020fb4c88edd54bf088472d8c0d20ca7977167",
+        "model_version": "v6_precision_20261010"
       },
       "catboost": {
         "file": "catboost.joblib",
-        "sha256": "ab84270b1994134138b6ec822dc4063ed6cca090730354b40bf385fcc937c1ff"
+        "sha256": "ab84270b1994134138b6ec822dc4063ed6cca090730354b40bf385fcc937c1ff",
+        "model_version": "v6_precision_20261010"
       },
       "ensemble": {
         "file": "ensemble.joblib",
-        "sha256": "1c7a64f88c8987ece44e9cef8706d6ddca1e33f0d135e524e1e8d2a58c29ad69"
+        "sha256": "1c7a64f88c8987ece44e9cef8706d6ddca1e33f0d135e524e1e8d2a58c29ad69",
+        "model_version": "v6_precision_20261010"
       }
     }
   },

@@ -28,8 +28,9 @@ def format_message(payload):
             lines+=['',f'📊 Estimación orientativa del modelo: <b>{percentage:.1f} de 100</b>',
                     'Esta puntuación aún no equivale a una probabilidad real calibrada.']
         else:
-            lines+=['',f'📊 Probabilidad estimada: <b>{percentage:.1f}%</b>',
-                    f'Aproximadamente {percentage:.0f} de cada 100 situaciones similares.']
+            label='Probabilidad ajustada con datos históricos' if p.get('calibration_version') else 'Probabilidad estimada'
+            lines+=['',f'📊 {label}: <b>{percentage:.1f}%</b>',
+                    f'Estimación de aproximadamente {percentage:.0f} de cada 100 situaciones similares.']
     lines+=['','🤖 <i>Analytics V6 · experimental</i>']
     if payload.get('source')=='technical_test':
         lines[0]='<b>🧪 PRUEBA TÉCNICA SPORTEDGE V6</b>'
