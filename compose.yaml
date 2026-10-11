@@ -1,7 +1,11 @@
 name: sportedge-v6
+x-link-schedule: &link-schedule
+  V6_LINK_BUILD_HOUR: ${V6_LINK_BUILD_HOUR:-2}
+  V6_LINK_BUILD_MINUTE: ${V6_LINK_BUILD_MINUTE:-0}
+  V6_LINK_REFRESH_SECONDS: ${V6_LINK_REFRESH_SECONDS:-21600}
 x-runtime: &runtime
   build: .
-  image: sportedge-integration-v6:1.1.0
+  image: sportedge-integration-v6:1.2.0
   init: true
   restart: unless-stopped
   cpus: 0.25
@@ -76,6 +80,8 @@ services:
       options: {max-size: "10m", max-file: "3"}
   api:
     <<: *runtime
+    environment:
+      <<: [*environment, *link-schedule]
     ports: ["127.0.0.1:8791:8791"]
     healthcheck:
       test: [CMD,python,-c,"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8791/health/ready',timeout=3)"]
@@ -112,6 +118,53 @@ services:
     secrets: [db_password,integration_api_key,model_api_key,source_database_url]
     # Separate source connection through host.docker.internal. No V2 network membership.
     extra_hosts: ["host.docker.internal:host-gateway"]
+  links-worker:
+    <<: *runtime
+    profiles: [links]
+    command: [python,-m,integration.link_worker]
+    cpus: 0.10
+    mem_limit: 128m
+    labels:
+      com.sportedge.integration: analytics-v6
+      com.sportedge.component: fixture-catalogues
+      com.sportedge.role: fixture-link-registry
+      com.sportedge.schedule.timezone: America/Lima
+      com.sportedge.schedule.hour: ${V6_LINK_BUILD_HOUR:-2}
+      com.sportedge.schedule.minute: ${V6_LINK_BUILD_MINUTE:-0}
+    environment:
+      <<: [*environment, *link-schedule]
+      V6_SOURCE_DATABASE_URL_FILE: /run/secrets/source_database_url
+      V6_365SCORES_CATALOGUE_URL: ${V6_365SCORES_CATALOGUE_URL:-https://webws.365scores.com/web/games/}
+      V6_BETANO_CATALOGUE_URL: ${V6_BETANO_CATALOGUE_URL:-https://www.betano.pe}
+      V6_LINK_FEED_ALLOWED_HOSTS: ${V6_LINK_FEED_ALLOWED_HOSTS:-}
+    secrets: [db_password,source_database_url]
+    extra_hosts: ["host.docker.internal:host-gateway"]
+  betano-web:
+    <<: *runtime
+    profiles: [links-web]
+    build:
+      context: .
+      dockerfile: Dockerfile.links-web
+    image: sportedge-v6-betano-web:1.2.0
+    command: [python,-m,integration.betano_web]
+    cpus: 0.5
+    mem_limit: 768m
+    pids_limit: 256
+    tmpfs: ["/tmp:size=128m,mode=1777", "/home/appuser:size=16m,uid=10001,gid=10001,mode=700"]
+    shm_size: 128m
+    labels:
+      com.sportedge.integration: analytics-v6
+      com.sportedge.component: fixture-catalogues
+      com.sportedge.role: betano-public-catalogue
+      com.sportedge.schedule.timezone: America/Lima
+      com.sportedge.schedule.hour: ${V6_LINK_BUILD_HOUR:-2}
+      com.sportedge.schedule.minute: ${V6_LINK_BUILD_MINUTE:-0}
+    environment:
+      <<: *link-schedule
+      V6_DATABASE_URL: postgresql://v6@v6-db:5432/sportedge_v6
+      V6_DB_PASSWORD_FILE: /run/secrets/db_password
+      V6_DB_POOL_SIZE: "1"
+    secrets: [db_password]
 
 volumes:
   v6_data:

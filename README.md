@@ -4,6 +4,14 @@ Stack independiente que recibe snapshots, los registra antes de invocar Analytic
 
 La versión 1.1.0 invoca por defecto `P15_logistic_002_20261011_recent_cal1`: 44,92% de precisión y 15,85% de recall en test histórico reciente, con estabilidad futura sin verificar. El usuario autorizó su implementación experimental. [Contrato, registro y reversión](docs/PRECISION15_RELEASE.md).
 
+## Catálogos diarios de partidos V6
+
+El módulo **`v6.fixture_catalogues`** prepara los enlaces de 365Scores y Betano a las **02:00 de Perú (`America/Lima`)**, con refrescos por lotes cada seis horas. `links-worker` y `betano-web` son servicios Docker separados, con límites de recursos, reinicio automático y controles propios; las alertas leen el registro local. El catálogo automático de Betano contiene eventos destacados y su cobertura es parcial.
+
+Estado autenticado: `GET /v1/fixture-links/status`, con horario, próxima preparación diaria, ejecuciones, errores y cobertura; en `/docs` aparece como **Catálogos diarios de partidos**. Operación: `scripts/ops.ps1 -Action StatusLinks|LogsLinks|PauseLinks|ResumeLinks`. [Configuración y evidencia](docs/FIXTURE_LINKS.md).
+
+Al enviar una alerta, Telegram añade **Ver partido en 365Scores** y **Abrir mercados en Betano** cuando existen enlaces vigentes para la misma identidad del fixture. El formato es común a texto, foto, álbum y respaldo a texto. Los enlaces usados se guardan en `telegram_outbox.payload.fixture_links`. La alerta continúa si un proveedor no tiene enlace o falla la lectura del caché; el envío nunca descarga catálogos en línea.
+
 ## Instalar y encender
 
 Clonar este repositorio y [SportEdgeAnalyticsV6](https://github.com/soportesportedge/SportEdgeAnalyticsV6) en carpetas hermanas:
@@ -45,6 +53,8 @@ La tabla `v6.match_centre_invocations` contiene 222 columnas originales, 78 colu
 El worker usa `FOR UPDATE SKIP LOCKED`, lease de 60 segundos y token de propiedad. Una respuesta tardía de un trabajador antiguo no puede sobrescribir al nuevo. Inferencia y outbox se confirman en una transacción. Hay cinco intentos, backoff acotado y reutilización de conexiones HTTP.
 
 ## Telegram de pruebas V6
+
+La integración 1.2.0 añade un worker independiente para preparar el registro diario de enlaces de 365Scores y Betano. Telegram incorpora los enlaces exactos y vigentes del registro local. [Configuración, contrato, endpoints y límites de acceso/app](docs/FIXTURE_LINKS.md).
 
 La familia predeterminada es ahora `logistic`, versión `P15_logistic_002_20261011_recent_cal1`. El resultado registra score original, probabilidad ajustada, versión del calibrador, umbral equivalente y regla de decisión. El integrador verifica SHA/versiones y selecciona con score >= 0,608364981863603; no confunde el umbral con la escala calibrada. La migración 003 añade columnas de metadatos a la instancia V6. Telegram identifica el ajuste histórico y mantiene el aviso experimental. [Comparación, protocolo y reversión](docs/PRECISION15_RELEASE.md).
 

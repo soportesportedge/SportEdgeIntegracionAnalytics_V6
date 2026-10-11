@@ -1,0 +1,17 @@
+FROM python:3.11-slim-bookworm
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/app
+WORKDIR /app
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt playwright==1.63.0 && \
+    playwright install --with-deps firefox && \
+    rm -rf /var/lib/apt/lists/*
+COPY integration ./integration
+COPY contracts ./contracts
+COPY sql ./sql
+RUN useradd --uid 10001 --create-home appuser && \
+    mkdir -p /opt/playwright && \
+    cp -a /root/.cache/ms-playwright/. /opt/playwright/ && \
+    chmod -R a+rX /opt/playwright
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/playwright
+USER 10001:10001
+CMD ["python","-m","integration.betano_web"]

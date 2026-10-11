@@ -7,6 +7,7 @@ from urllib.parse import urlsplit
 import httpx
 from integration.config import enabled, secret, bounded
 from integration.database import transaction
+from integration.fixture_links import cached_links, valid_event_url
 
 log=logging.getLogger(__name__)
 logging.getLogger('httpx').setLevel(logging.WARNING)
@@ -33,6 +34,11 @@ def format_message(payload):
                     f'El modelo estima aproximadamente {percentage:.0f} de cada 100 situaciones similares.']
             if p.get('calibration_validation_status')=='historical_reused_test_prospective_unverified':
                 lines.append('Estimación experimental pendiente de validación con partidos nuevos.')
+    links=payload.get('fixture_links',{})
+    for provider,label in (('365scores','📱 Ver partido en 365Scores'),('betano','🎯 Abrir mercados en Betano')):
+        link=links.get(provider,{}) if isinstance(links,dict) else {}
+        if isinstance(link,dict) and valid_event_url(provider,link.get('url'),link.get('event_id')):
+            lines+=['',f'<a href="{html.escape(link["url"],quote=True)}">{label}</a>']
     lines+=['','🤖 <i>Analytics V6 · experimental</i>']
     if payload.get('source')=='technical_test':
         lines[0]='<b>🧪 PRUEBA TÉCNICA SPORTEDGE V6</b>'
@@ -66,7 +72,20 @@ async def claim(p):
             UPDATE v6.telegram_outbox o SET status='sending',attempts=attempts+1,lease_token=$1,
                 leased_until=now()+interval '60 seconds'
             FROM candidate c WHERE o.outbox_id=c.outbox_id RETURNING o.*''',token)
-        return dict(row) if row else None
+        if row:
+            # A small indexed V6-only read. A savepoint keeps cache failures from
+            # cancelling the outbox claim. Never contacts either provider here.
+            payload=dict(row['payload'])
+            links={}
+            try:
+                async with c.transaction():
+                    links=await cached_links(c,payload['snapshot'])
+            except Exception as exc:
+                log.warning('Fixture links omitted: %s',type(exc).__name__)
+            payload['fixture_links']=links
+            await c.execute('UPDATE v6.telegram_outbox SET payload=$2 WHERE outbox_id=$1',row['outbox_id'],payload)
+            return dict(row) | {'payload':payload}
+        return None
 
 async def finish(p,row,status,message_id=None,error=None,delay=5):
     async with transaction(p) as c:

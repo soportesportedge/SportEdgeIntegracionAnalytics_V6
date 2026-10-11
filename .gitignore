@@ -8,3 +8,11 @@ secrets/
 test-results/
 backups/
 desktop.ini
+# Local operational evidence; publish implementation and tests only.
+docs/fixture_link_*.json
+docs/fixture_catalogue_schedule_*.json
+docs/telegram_fixture_links_validation_*.json
+docs/betano_*research*.json
+docs/betano_top_events_*.json
+docs/betano_extra_catalogue_checks.json
+docs/betano_web_probe.txt
