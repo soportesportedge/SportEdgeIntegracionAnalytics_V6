@@ -1,7 +1,7 @@
 name: sportedge-v6
 x-runtime: &runtime
   build: .
-  image: sportedge-integration-v6:1.0.0
+  image: sportedge-integration-v6:1.1.0
   init: true
   restart: unless-stopped
   cpus: 0.25
@@ -57,7 +57,7 @@ services:
   analytics:
     build:
       context: ${V6_ANALYTICS_CONTEXT:-../SportEdgeAnalyticsV6}
-    image: sportedge-analytics-v6:1.0.0
+    image: sportedge-analytics-v6:1.1.0
     init: true
     restart: unless-stopped
     cpus: 1.0

@@ -23,7 +23,7 @@ async def lifespan(app):
     await app.state.http.aclose()
     await app.state.pool.close()
 
-app=FastAPI(title='SportEdge V6 Integration',version='1.0.0',lifespan=lifespan)
+app=FastAPI(title='SportEdge V6 Integration',version='1.1.0',lifespan=lifespan)
 
 def authorize(authorization):
     expected=secret('V6_INTEGRATION_API_KEY')
@@ -33,7 +33,7 @@ def authorize(authorization):
 class Invocation(BaseModel):
     model_config=ConfigDict(extra='forbid')
     snapshot:dict[str,Any]
-    family:str='random_forest'
+    family:str=repo.DEFAULT_FAMILY
     notify:bool=True
     source:str='manual'
 
@@ -45,7 +45,7 @@ async def ready():
     async with app.state.pool.acquire() as c:
         exists=await c.fetchval("SELECT to_regclass('v6.match_centre_invocations') IS NOT NULL")
     if not exists: raise HTTPException(503,'Migration required')
-    return {'status':'ok'}
+    return {'status':'ok','default_family':repo.DEFAULT_FAMILY,'contract_version':repo.CONTRACT['version']}
 
 @app.post('/v1/invocations')
 async def submit(req:Invocation, mode:Literal['async','sync']=Query(default='async'),

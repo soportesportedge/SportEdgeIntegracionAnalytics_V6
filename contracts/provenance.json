@@ -1,13 +1,20 @@
 {
   "source_sql_sha256": "d05943e4923b2e0e02cecb2e2f817e28b76104c511b12aa3040de028ff68abe2",
   "model_registry": {
-    "version": "v6_precision_20261010_cal1",
-    "selected_family": "random_forest",
+    "version": "P15_logistic_002_20261011_recent_cal1",
+    "selected_family": "logistic",
     "models": {
       "logistic": {
-        "file": "logistic.joblib",
-        "sha256": "22cd22a732cc5c904aafa69ce025f8cb05057f46d81db28416be7a8b1877c32d",
-        "model_version": "v6_precision_20261010"
+        "file": "recent_precision_candidate.joblib",
+        "sha256": "5a60f50beeceaf8e969d050d1dbc1ca3e9eaee94031a81cb0962f15b551d9dad",
+        "model_version": "P15_logistic_002_20261011_recent_cal1",
+        "decision_policy_version": "P15_logistic_002_raw_20261011",
+        "raw_threshold": 0.608364981863603,
+        "calibrated_probability_threshold": 0.47671556713917673,
+        "calibration_version": "v6_logistic_platt_lambda03_20261011_v1",
+        "calibration_validation_status": "historical_reused_test_prospective_unverified",
+        "statistical_production_approved": false,
+        "test_deployment_user_authorized": true
       },
       "extra_trees": {
         "file": "extra_trees.joblib",

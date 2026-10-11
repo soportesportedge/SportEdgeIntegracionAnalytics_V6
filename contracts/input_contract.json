@@ -1,5 +1,5 @@
 {
-  "version": "v6_precision_20261010_cal1",
+  "version": "P15_logistic_002_20261011_recent_cal1",
   "predictors": [
     "league_id",
     "cluster",
@@ -1406,12 +1406,13 @@
     }
   ],
   "model_versions": {
-    "logistic": "v6_precision_20261010",
+    "logistic": "P15_logistic_002_20261011_recent_cal1",
     "extra_trees": "v6_precision_20261010",
     "random_forest": "v6_precision_20261010_cal1",
     "hist_gradient_boosting": "v6_precision_20261010",
     "xgboost": "v6_precision_20261010",
     "catboost": "v6_precision_20261010",
     "ensemble": "v6_precision_20261010"
-  }
+  },
+  "default_family": "logistic"
 }

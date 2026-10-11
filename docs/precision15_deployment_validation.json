@@ -1,0 +1,172 @@
+{
+  "checked_at": "2026-10-11T14:21:15.475360+00:00",
+  "checks": {
+    "telegram_authorized_test_chat_preserved": true,
+    "previous_images_and_v6_backup_preserved": true,
+    "all_seven_live_versions_and_hashes_verified": true,
+    "sync_async_original_inputs_engineering_and_typed_metadata_verified": true,
+    "historical_verification_rows_not_notified": true,
+    "one_marked_technical_test_confirmed_in_authorized_chat": true,
+    "all_prior_completed_inputs_and_results_preserved": true,
+    "collector_cursor_preserved": true,
+    "v2_health_preserved": true,
+    "all_v2_production_model_reporter_and_v6_db_ids_start_times_unchanged": true,
+    "additive_v6_migration_applied": true,
+    "live_resource_limits_preserved": true
+  },
+  "collector_cursor_before": {
+    "name": "match_centre",
+    "last_id": 106777,
+    "updated_at": "2026-10-11T14:21:16.704456+00:00"
+  },
+  "telegram_chat_id": "-5538403637",
+  "v2_health_before": {
+    "status": "ok",
+    "app_env": "local",
+    "checks": {
+      "postgresql": "ok",
+      "redis": "ok",
+      "mongodb": "ok"
+    }
+  },
+  "queue_at_cutover": {
+    "pending": 0,
+    "processing": 0
+  },
+  "backup": {
+    "file": "sportedge_v6_before_precision15_20261011T142122Z.dump",
+    "bytes": 10418698,
+    "sha256": "d0553ca758545e0bbf0b7ba3489fb46874d73d9c3e9638539ba80142136d9747",
+    "toc_verified": true
+  },
+  "restart_and_readiness_seconds": 10.919,
+  "analytics_health": {
+    "status": "ok",
+    "family": "logistic",
+    "model_version": "P15_logistic_002_20261011_recent_cal1",
+    "artifact_sha256": "5a60f50beeceaf8e969d050d1dbc1ca3e9eaee94031a81cb0962f15b551d9dad",
+    "research_only": true
+  },
+  "integration_health": {
+    "status": "ok",
+    "default_family": "logistic",
+    "contract_version": "P15_logistic_002_20261011_recent_cal1"
+  },
+  "verified_invocations": [
+    {
+      "invocation_id": "3b46ffa4-a5a3-409b-b89f-1a915bfac439",
+      "mode": "sync",
+      "raw_model_score": 0.5610257681130767,
+      "probability": 0.4611021083467311,
+      "signal": false,
+      "latency_ms": 101.483
+    },
+    {
+      "invocation_id": "710d2915-be7d-4ea7-b1df-c43824f3d54b",
+      "mode": "async",
+      "raw_model_score": 0.6142056887070371,
+      "probability": 0.478686403725367,
+      "signal": true,
+      "latency_ms": 63.204
+    },
+    {
+      "invocation_id": "de45a03d-9ba5-4e4f-99e5-ddfc0cee132b",
+      "mode": "sync",
+      "raw_model_score": 0.5944912060067843,
+      "probability": 0.47207774626513815,
+      "signal": false,
+      "latency_ms": 57.228
+    },
+    {
+      "invocation_id": "9af20afc-1362-4d3d-85af-d3411eb15685",
+      "mode": "async",
+      "raw_model_score": 0.8241186093048067,
+      "probability": 0.5650259112895861,
+      "signal": true,
+      "latency_ms": 104.888
+    },
+    {
+      "invocation_id": "2cdd88bb-2f8d-4deb-b864-9d0ada8146a0",
+      "mode": "sync",
+      "raw_model_score": 0.607914574263183,
+      "probability": 0.4765640571718707,
+      "signal": false,
+      "latency_ms": 71.758
+    },
+    {
+      "invocation_id": "c40862ca-1a35-420b-8d35-363e9df5a539",
+      "mode": "async",
+      "raw_model_score": 0.6092155090311538,
+      "probability": 0.47700185222449304,
+      "signal": true,
+      "latency_ms": 70.164
+    },
+    {
+      "invocation_id": "30c993f1-9f7a-46b7-8275-99ff5e271e70",
+      "mode": "sync",
+      "raw_model_score": 0.6077103337517775,
+      "probability": 0.47649537570234074,
+      "signal": false,
+      "latency_ms": 91.299
+    },
+    {
+      "invocation_id": "f11399e3-c98d-4403-83cb-042bb38a1663",
+      "mode": "async",
+      "raw_model_score": 0.6097246881390487,
+      "probability": 0.4771733545637119,
+      "signal": true,
+      "latency_ms": 63.692
+    }
+  ],
+  "telegram_technical_test": {
+    "invocation_id": "76666bb0-2724-42b8-bd84-46458697b5b3",
+    "status": "sent",
+    "telegram_message_id": "3039",
+    "explicitly_marked_historical": true
+  },
+  "preserved_completed_records": 797,
+  "collector_cursor_after": {
+    "name": "match_centre",
+    "last_id": 106782,
+    "updated_at": "2026-10-11T14:21:56.984806+00:00"
+  },
+  "v2_health_after": {
+    "status": "ok",
+    "app_env": "local",
+    "checks": {
+      "postgresql": "ok",
+      "redis": "ok",
+      "mongodb": "ok"
+    }
+  },
+  "migrations": [
+    "001",
+    "002",
+    "003"
+  ],
+  "status": {
+    "completed": 806
+  },
+  "passed": true,
+  "automated_tests": {
+    "analytics_passed": 28,
+    "integration_passed": 22,
+    "integration_database": "sportedge_v6_test"
+  },
+  "resource_limits": {
+    "analytics": {
+      "cpu_cores": 1,
+      "memory_bytes": 1073741824,
+      "pids": 128,
+      "read_only": true
+    },
+    "api_inference_collector_telegram_each": {
+      "cpu_cores": 0.25,
+      "memory_bytes": 201326592,
+      "pids": 64,
+      "read_only": true
+    }
+  },
+  "live_source_invocations_after_cutover_at_followup": 0,
+  "live_source_note": "Collector running with preserved incremental cursor; no eligible new source snapshot observed by followup check. Technical verification uses historical examples."
+}

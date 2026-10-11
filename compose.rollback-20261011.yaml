@@ -1,0 +1,14 @@
+# Use with compose.yaml; requires the preserved pre-update local images.
+services:
+  migrate:
+    image: sportedge-integration-v6:1.0.0
+  api:
+    image: sportedge-integration-v6:1.0.0
+  inference-worker:
+    image: sportedge-integration-v6:1.0.0
+  collector:
+    image: sportedge-integration-v6:1.0.0
+  telegram-worker:
+    image: sportedge-integration-v6:1.0.0
+  analytics:
+    image: sportedge-analytics-v6:1.0.0

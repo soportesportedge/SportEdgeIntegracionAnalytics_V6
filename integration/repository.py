@@ -11,7 +11,12 @@ CONTRACT = json.loads((ROOT/'contracts'/'input_contract.json').read_text())
 SOURCE = CONTRACT['source_columns']
 ENGINEERED = CONTRACT['engineering_columns']
 FAMILIES = CONTRACT['families']
+DEFAULT_FAMILY = CONTRACT['default_family']
 CONTEXT = [{'name':n,'sql_type':'text'} for n in ('league_name','home_team_logo','away_team_logo')]+[{'name':'source_raw','sql_type':'jsonb'}]
+MODEL_METADATA = [{'name':n,'sql_type':'text'} for n in
+    ('candidate_id','artifact_sha256','probability_status','calibration_method','calibration_version',
+     'calibration_validation_status','decision_basis','decision_policy_version')]+[
+    {'name':n,'sql_type':'double precision'} for n in ('raw_model_score','decision_threshold')]
 
 def canonical(value): return json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False)
 
@@ -67,7 +72,7 @@ async def hydrate(conn, invocation_id, values, columns):
     assignment=', '.join('"'+n+'"=typed."'+n+'"' for n in names)
     await conn.execute(f'UPDATE v6.match_centre_invocations j SET {assignment} FROM jsonb_populate_record(NULL::v6.match_centre_invocations,$1::jsonb) AS typed WHERE j.invocation_id=$2',data,invocation_id)
 
-async def submit(p, snapshot, family='random_forest', notify=True, key=None, source='manual'):
+async def submit(p, snapshot, family=DEFAULT_FAMILY, notify=True, key=None, source='manual'):
     error=validation_error(snapshot,family)
     body={'snapshot':snapshot,'family':family,'notify':notify,'source':source}
     try: digest=hashlib.sha256(canonical(body).encode()).hexdigest()
@@ -134,6 +139,7 @@ async def complete(p, job, result, telegram_payload=None):
             job['invocation_id'],job['lease_token'],result,result['model_version'],result.get('probability'),
             result['threshold'],result['eligible'],result['signal'],result['engineered_features'])
         if not row: return False
+        await hydrate(c,job['invocation_id'],result,MODEL_METADATA)
         await hydrate(c,job['invocation_id'],result['engineered_features'],ENGINEERED)
         await c.execute('INSERT INTO v6.invocation_events(invocation_id,event,detail) VALUES ($1,$2,$3)',job['invocation_id'],'completed',{'artifact_sha256':result['artifact_sha256']})
         if telegram_payload:

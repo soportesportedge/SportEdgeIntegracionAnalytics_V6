@@ -1,0 +1,18 @@
+{
+  "source_artifact_sha256": "5a60f50beeceaf8e969d050d1dbc1ca3e9eaee94031a81cb0962f15b551d9dad",
+  "deployed_artifact_sha256": "5a60f50beeceaf8e969d050d1dbc1ca3e9eaee94031a81cb0962f15b551d9dad",
+  "test_rows_verified": 5507,
+  "signal_count": 354,
+  "true_positive_count": 159,
+  "max_raw_error": 1.1102230246251565e-16,
+  "max_probability_error": 9.71445146547012e-17,
+  "raw_signal_decisions_preserved": true,
+  "home_class_index": 1,
+  "estimator_classes": [
+    0,
+    1,
+    2
+  ],
+  "test_deployment_user_authorized": true,
+  "statistical_production_approved": false
+}

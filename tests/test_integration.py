@@ -113,6 +113,36 @@ def test_calibrated_contract_enforces_frozen_signal_and_family_versions():
     r['signal']=True;r['model_version']='v6_precision_20261010'
     with pytest.raises(ValueError,match='unexpected_model_version'):check_result(r,j)
 
+def test_recent_default_uses_raw_threshold_and_rejects_mixed_probability_scale():
+    from uuid import uuid4
+    assert repo.DEFAULT_FAMILY=='logistic'
+    j={'invocation_id':uuid4(),'id':1,'family':'logistic'}
+    r=result(j);spec=REGISTRY['models']['logistic']
+    r.update(model_version=spec['model_version'],artifact_sha256=spec['sha256'],raw_model_score=.65,
+        probability=.50,signal=True,decision_policy_version=spec['decision_policy_version'],decision_basis='raw_model_score',
+        decision_threshold=spec['raw_threshold'],calibration_version=spec['calibration_version'])
+    check_result(r,j)
+    r['signal']=False
+    with pytest.raises(ValueError,match='signal_policy_mismatch'):check_result(r,j)
+    r['signal']=True;r['decision_threshold']=spec['calibrated_probability_threshold']
+    with pytest.raises(ValueError,match='unexpected_calibration_policy'):check_result(r,j)
+
+def test_model_metadata_and_null_inputs_are_persisted():
+    async def case(p):
+        s=snapshot();s['home_big_chances_missed']=None
+        job,_=await repo.submit(p,s);j=await repo.claim(p,job);r=result(j)
+        spec=REGISTRY['models']['logistic']
+        r.update(candidate_id='P15_logistic_002',model_version=spec['model_version'],artifact_sha256=spec['sha256'],
+            raw_model_score=.65,probability=.50,decision_threshold=spec['raw_threshold'],decision_basis='raw_model_score',
+            calibration_version=spec['calibration_version'],calibration_method='platt',
+            calibration_validation_status=spec['calibration_validation_status'],decision_policy_version=spec['decision_policy_version'])
+        assert await repo.complete(p,j,r)
+        row=await repo.get(p,job)
+        assert row['family']=='logistic' and row['input_values']==s and row['home_big_chances_missed'] is None
+        for field in repo.MODEL_METADATA:
+            assert row[field['name']]==r.get(field['name'])
+    run(case)
+
 def test_calibrated_telegram_text_keeps_experimental_context():
     message=telegram.format_message({'snapshot':snapshot(),'prediction':{'probability':.42,'probability_status':'calibration_fitted','calibration_version':'cal1','threshold':.4}})
     assert '42.0%' in message and '42 de cada 100' in message and 'datos históricos' in message

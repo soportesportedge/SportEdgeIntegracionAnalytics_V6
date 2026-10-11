@@ -2,6 +2,8 @@
 
 Stack independiente que recibe snapshots, los registra antes de invocar Analytics V6 y gestiona Telegram mediante una bandeja durable. El backend, sus workers, sus colas y su frontend actuales no se modifican. PostgreSQL V6 usa su propia instancia, volumen, red, migraciones y credenciales.
 
+La versión 1.1.0 invoca por defecto `P15_logistic_002_20261011_recent_cal1`: 44,92% de precisión y 15,85% de recall en test histórico reciente, con estabilidad futura sin verificar. El usuario autorizó su implementación experimental. [Contrato, registro y reversión](docs/PRECISION15_RELEASE.md).
+
 ## Instalar y encender
 
 Clonar este repositorio y [SportEdgeAnalyticsV6](https://github.com/soportesportedge/SportEdgeAnalyticsV6) en carpetas hermanas:
@@ -44,7 +46,7 @@ El worker usa `FOR UPDATE SKIP LOCKED`, lease de 60 segundos y token de propieda
 
 ## Telegram de pruebas V6
 
-La versión predeterminada de Random Forest es ahora `v6_precision_20261010_cal1`. El resultado registra score original, probabilidad ajustada, versión del calibrador, umbral equivalente y regla de decisión original. El integrador verifica SHA/versiones por familia. La calibración conserva la política de señales y su clave de deduplicación, evitando repetir avisos por actualizar solamente la escala probabilística. Telegram identifica el ajuste con datos históricos y mantiene el aviso experimental. [Comparación y protocolo](docs/CALIBRATION.md).
+La familia predeterminada es ahora `logistic`, versión `P15_logistic_002_20261011_recent_cal1`. El resultado registra score original, probabilidad ajustada, versión del calibrador, umbral equivalente y regla de decisión. El integrador verifica SHA/versiones y selecciona con score >= 0,608364981863603; no confunde el umbral con la escala calibrada. La migración 003 añade columnas de metadatos a la instancia V6. Telegram identifica el ajuste histórico y mantiene el aviso experimental. [Comparación, protocolo y reversión](docs/PRECISION15_RELEASE.md).
 
 El destino acordado es `-5538403637`, separado del chat actual. Configurar token y chat en los secretos correspondientes. Si se reutiliza el bot actual:
 

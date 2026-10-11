@@ -30,7 +30,9 @@ def format_message(payload):
         else:
             label='Probabilidad ajustada con datos históricos' if p.get('calibration_version') else 'Probabilidad estimada'
             lines+=['',f'📊 {label}: <b>{percentage:.1f}%</b>',
-                    f'Estimación de aproximadamente {percentage:.0f} de cada 100 situaciones similares.']
+                    f'El modelo estima aproximadamente {percentage:.0f} de cada 100 situaciones similares.']
+            if p.get('calibration_validation_status')=='historical_reused_test_prospective_unverified':
+                lines.append('Estimación experimental pendiente de validación con partidos nuevos.')
     lines+=['','🤖 <i>Analytics V6 · experimental</i>']
     if payload.get('source')=='technical_test':
         lines[0]='<b>🧪 PRUEBA TÉCNICA SPORTEDGE V6</b>'

@@ -187,5 +187,6 @@
     "captured_at": "2026-08-08 22:12:12.089857+00",
     "state_developer_name": "INPLAY_2ND_HALF"
   },
-  "record_result": true
+  "record_result": true,
+  "family": "logistic"
 }
