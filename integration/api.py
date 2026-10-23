@@ -26,7 +26,7 @@ async def lifespan(app):
     await app.state.http.aclose()
     await app.state.pool.close()
 
-app=FastAPI(title='SportEdge V6 Integration',version='1.2.0',lifespan=lifespan,
+app=FastAPI(title='SportEdge V6 Integration',version='1.3.0',lifespan=lifespan,
     openapi_tags=[{'name':'Catálogos diarios de partidos',
         'description':'Módulo v6.fixture_catalogues: programación, cobertura y registros locales. La descarga se ejecuta en servicios independientes.'}])
 
@@ -165,8 +165,12 @@ async def link_status(match_day:date|None=None,authorization:str|None=Header(def
             WHERE match_day=$1 ORDER BY provider''',target)
         counts=await c.fetch('''SELECT provider,status,count(*) AS count FROM v6.fixture_link_registry
             WHERE match_day=$1 GROUP BY provider,status ORDER BY provider,status''',target)
+        requests=await c.fetch('''SELECT match_day,provider,slot_at,status,attempts,requested_at,
+            finished_at,event_count,last_error FROM v6.fixture_link_catalogue_requests
+            WHERE match_day=$1 ORDER BY provider''',target)
     return {'schedule':schedule,'match_day':target,'runs':[dict(x) for x in runs],
         'catalogues':[dict(x) for x in catalogues],'counts':[dict(x) for x in counts],
+        'catalogue_requests':[dict(x) for x in requests],
         'provider_coverage':{'365scores':'public_daily_calendar','betano':'partial_featured_events'},
         'note':'Schedule configuration and recorded executions; container liveness is inspected with ops.ps1 -Action StatusLinks.'}
 

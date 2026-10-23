@@ -16,6 +16,7 @@ from integration.config import bounded
 from integration.database import pool
 from integration.fixture_links import day_bounds, validate_events
 from integration.link_schedule import configuration,due_day
+from integration.link_jobs import claim_browser_request,fail_browser_request
 
 URL = 'https://www.betano.pe/sport/futbol/proximos-partidos-hoy/'
 ORIGIN = 'betano_public_browser'
@@ -103,7 +104,8 @@ async def collect(day):
     """One ordinary page load; read its already received anonymous bulk response."""
     if os.getenv('V6_BETANO_WEB_MODE','featured')=='calendar':return await collect_calendar(day)
     from playwright.async_api import async_playwright
-    if day!=datetime.now(ZoneInfo('America/Lima')).date():raise ValueError('browser_current_day_only')
+    today=datetime.now(ZoneInfo('America/Lima')).date()
+    if abs((day-today).days)>1:raise ValueError('browser_current_or_adjacent_day_only')
     async with async_playwright() as pw:
         browser=await pw.firefox.launch(headless=True)
         try:
@@ -185,11 +187,14 @@ async def collect_calendar(day):
         finally:await browser.close()
 
 
-async def publish(p,day,events):
+async def publish(p,day,events,request_id=None):
     events = validate_events(events,day,provider='betano')
     async with p.acquire() as c, c.transaction():
         if not await c.fetchval('SELECT pg_try_advisory_xact_lock(610104)'):
             raise ValueError('link_builder_busy')
+        if request_id and not await c.fetchval('''SELECT 1 FROM v6.fixture_link_catalogue_requests
+                WHERE request_id=$1 AND status='running' FOR UPDATE''',request_id):
+            raise ValueError('stale_catalogue_request')
         prior = await c.fetchrow('SELECT events,origin FROM v6.fixture_link_catalogues WHERE match_day=$1 AND provider=\'betano\'',day)
         if prior and prior['origin'] != ORIGIN:
             raise ValueError('operator_catalogue_preserved')
@@ -201,48 +206,41 @@ async def publish(p,day,events):
             VALUES ($1,'betano',$2,$3,$4) ON CONFLICT(match_day,provider) DO UPDATE
             SET events=EXCLUDED.events,origin=EXCLUDED.origin,valid_until=EXCLUDED.valid_until,imported_at=now()''',
             day,merged,ORIGIN,day_bounds(day)[1]+timedelta(hours=12))
+        reason='catalogue_ready' if request_id else 'catalogue_imported_rebuild_pending'
         await c.execute('''INSERT INTO v6.fixture_link_runs(match_day,provider,status,attempts,last_error)
-            VALUES ($1,'betano','failed',0,'catalogue_imported_rebuild_pending')
+            VALUES ($1,'betano','failed',0,$2)
             ON CONFLICT(match_day,provider) DO UPDATE SET status='failed',attempts=0,
-            next_attempt_at=now(),last_error='catalogue_imported_rebuild_pending' ''',day)
+            next_attempt_at=now(),last_error=EXCLUDED.last_error ''',day,reason)
+        if request_id:
+            await c.execute('''UPDATE v6.fixture_link_catalogue_requests SET status='completed',
+                finished_at=now(),event_count=$2,last_error=NULL WHERE request_id=$1''',request_id,len(merged))
     return len(merged)
+
+
+async def process_request(p):
+    request=await claim_browser_request(p)
+    if not request:return False
+    day=request['match_day']
+    try:
+        # No source DB connection, and no browser at all without a pending job.
+        events=await asyncio.wait_for(collect(day),180)
+        count=await publish(p,day,events,request['request_id'])
+        log.info('Betano requested catalogue completed: day=%s slot=%s events=%s',day,request['slot_at'],count)
+    except Exception as exc:
+        reason=str(exc) if isinstance(exc,ValueError) else type(exc).__name__
+        await fail_browser_request(p,request,reason)
+        log.warning('Betano requested catalogue failed: day=%s attempt=%s reason=%s',day,request['attempts'],reason[:120])
+    return True
 
 
 async def run(once=False):
     log.info('V6 fixture catalogues started: service=betano-web configuration=%s',configuration())
-    p = await pool()
-    next_attempt = datetime.min.replace(tzinfo=timezone.utc)
-    attempts = 0
-    active_day = None
+    p=await pool()
     try:
         while True:
-            day = due_day()
-            if day != active_day:
-                active_day,attempts = day,0
-                next_attempt = datetime.min.replace(tzinfo=timezone.utc)
-            now = datetime.now(timezone.utc)
-            if day and now>=next_attempt and attempts<4:
-                async with p.acquire() as c:
-                    catalogue = await c.fetchrow('SELECT origin,imported_at FROM v6.fixture_link_catalogues WHERE match_day=$1 AND provider=\'betano\'',day)
-                refresh = int(bounded('V6_LINK_REFRESH_SECONDS',21600,900,86400))
-                if catalogue and (catalogue['origin']!=ORIGIN or catalogue['imported_at']+timedelta(seconds=refresh)>now):
-                    next_attempt = now+timedelta(seconds=refresh)
-                else:
-                    try:
-                        events = await asyncio.wait_for(collect(day),180)
-                        count = await publish(p,day,events)
-                        log.info('Betano public browser catalogue: day=%s events=%s',day,count)
-                        attempts = 0
-                        next_attempt = now+timedelta(seconds=refresh)
-                    except Exception as exc:
-                        attempts += 1
-                        next_attempt = now+timedelta(minutes=15)
-                        # No browser dumps, cookies, credentials or account state in logs.
-                        reason = str(exc) if isinstance(exc,ValueError) else type(exc).__name__
-                        log.warning('Betano public browser failed: day=%s attempt=%s reason=%s',day,attempts,reason[:120])
-                        if once:raise
+            busy=await process_request(p)
             if once:return
-            await asyncio.sleep(60)
+            await asyncio.sleep(1 if busy else 60)
     finally:await p.close()
 
 

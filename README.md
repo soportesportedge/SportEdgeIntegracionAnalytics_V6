@@ -6,11 +6,11 @@ La versión 1.1.0 invoca por defecto `P15_logistic_002_20261011_recent_cal1`: 44
 
 ## Catálogos diarios de partidos V6
 
-El módulo **`v6.fixture_catalogues`** prepara los enlaces de 365Scores y Betano a las **02:00 de Perú (`America/Lima`)**, con refrescos por lotes cada seis horas. `links-worker` y `betano-web` son servicios Docker separados, con límites de recursos, reinicio automático y controles propios; las alertas leen el registro local. El catálogo automático de Betano contiene eventos destacados y su cobertura es parcial.
+El módulo **`v6.fixture_catalogues`** prepara los enlaces de todos los partidos del día a las **02:00 de Perú (`America/Lima`)**. Cada dos horas procesa únicamente enlaces pendientes, por proveedor, de encuentros que empiezan en las siguientes dos horas o empezaron en la última hora. Los ciclos incluyen medianoche y conservan los enlaces resueltos. `links-worker` y `betano-web` son servicios Docker separados, con límites de recursos, reinicio automático y controles propios; las alertas leen el registro local. El navegador solo se activa ante una solicitud del worker. El catálogo automático de Betano contiene eventos destacados y su cobertura es parcial.
 
 Estado autenticado: `GET /v1/fixture-links/status`, con horario, próxima preparación diaria, ejecuciones, errores y cobertura; en `/docs` aparece como **Catálogos diarios de partidos**. Operación: `scripts/ops.ps1 -Action StatusLinks|LogsLinks|PauseLinks|ResumeLinks`. [Configuración y evidencia](docs/FIXTURE_LINKS.md).
 
-Al enviar una alerta, Telegram añade **Ver partido en 365Scores** y **Abrir mercados en Betano** cuando existen enlaces vigentes para la misma identidad del fixture. El formato es común a texto, foto, álbum y respaldo a texto. Los enlaces usados se guardan en `telegram_outbox.payload.fixture_links`. La alerta continúa si un proveedor no tiene enlace o falla la lectura del caché; el envío nunca descarga catálogos en línea.
+Al enviar una alerta, Telegram añade **Ver partido en 365Scores** y **Abrir mercados en Betano** cuando existen enlaces vigentes para la misma identidad del fixture. También incluye **Ver partido en SportEdge**, usando `https://portal.sportedge.online/matches/{fixture_id}` directamente desde el ID del snapshot, incluso si falta el caché externo. El formato es común a texto, foto, álbum y respaldo a texto. Los tres enlaces usados se guardan en `telegram_outbox.payload.fixture_links`; el envío nunca descarga catálogos en línea.
 
 ## Instalar y encender
 
@@ -54,7 +54,7 @@ El worker usa `FOR UPDATE SKIP LOCKED`, lease de 60 segundos y token de propieda
 
 ## Telegram de pruebas V6
 
-La integración 1.2.0 añade un worker independiente para preparar el registro diario de enlaces de 365Scores y Betano. Telegram incorpora los enlaces exactos y vigentes del registro local. [Configuración, contrato, endpoints y límites de acceso/app](docs/FIXTURE_LINKS.md).
+La integración 1.3.0 mantiene el registro diario de enlaces de 365Scores y Betano y añade ciclos incrementales cada dos horas, con ventanas de inicio y solicitudes persistidas para el navegador. Telegram incorpora los enlaces exactos y vigentes del registro local, además del enlace directo de SportEdge. [Configuración, contrato, endpoints y límites de acceso/app](docs/FIXTURE_LINKS.md).
 
 La familia predeterminada es ahora `logistic`, versión `P15_logistic_002_20261011_recent_cal1`. El resultado registra score original, probabilidad ajustada, versión del calibrador, umbral equivalente y regla de decisión. El integrador verifica SHA/versiones y selecciona con score >= 0,608364981863603; no confunde el umbral con la escala calibrada. La migración 003 añade columnas de metadatos a la instancia V6. Telegram identifica el ajuste histórico y mantiene el aviso experimental. [Comparación, protocolo y reversión](docs/PRECISION15_RELEASE.md).
 

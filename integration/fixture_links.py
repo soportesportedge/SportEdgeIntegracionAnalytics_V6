@@ -57,6 +57,25 @@ def valid_event_url(provider, value, event_id=None):
     return True
 
 
+def sportedge_match_url(fixture_id):
+    """SportEdge uses the source fixture ID; it needs no provider catalogue."""
+    if isinstance(fixture_id,bool) or not isinstance(fixture_id,(int,str)):
+        return None
+    text=str(fixture_id)
+    if not re.fullmatch(r'[1-9][0-9]{0,18}',text) or int(text)>9223372036854775807:
+        return None
+    return 'https://portal.sportedge.online/matches/'+text
+
+
+def with_sportedge_link(snapshot,provider_links=None):
+    links=dict(provider_links) if isinstance(provider_links,dict) else {}
+    # Always construct the official URL from the snapshot, never a supplied URL.
+    links.pop('sportedge',None)
+    url=sportedge_match_url(snapshot.get('id'))
+    if url:links['sportedge']={'fixture_id':str(snapshot['id']),'url':url}
+    return links
+
+
 def validate_events(events, day, tz='America/Lima', provider=None):
     if provider not in PROVIDERS or not isinstance(events,list) or len(events)>10000:
         raise ValueError('invalid_catalogue')

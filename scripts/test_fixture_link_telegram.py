@@ -20,7 +20,7 @@ import httpx
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from integration.database import init_connection
-from integration.fixture_links import cached_links
+from integration.fixture_links import cached_links, with_sportedge_link
 from integration.telegram import request_body
 
 
@@ -54,9 +54,9 @@ async def run(fixture_id, send):
             snapshot.update(home_team_name=names['home'], away_team_name=names['away'],
                             league_name=names['league'])
             started = perf_counter()
-            links = await cached_links(conn, snapshot)
+            links = with_sportedge_link(snapshot,await cached_links(conn, snapshot))
             lookup_ms = round((perf_counter() - started) * 1000, 3)
-            assert set(links) == {'365scores', 'betano'}, 'Both verified links required'
+            assert set(links) == {'365scores', 'betano', 'sportedge'}, 'Three verified links required'
     finally:
         await conn.close()
 
@@ -66,7 +66,7 @@ async def run(fixture_id, send):
                                      'fixture_links': links}, chat)
     assert method == 'sendMessage'
     anchors = [p for p in formatted['text'].split('\n') if p.startswith('<a href=')]
-    assert len(anchors) == 2, 'Production formatter omitted a link'
+    assert len(anchors) == 3, 'Production formatter omitted a link'
     kickoff = row['starting_at'].astimezone(ZoneInfo('America/Lima'))
     message = '\n'.join(['<b>🧪 PRUEBA DE ENLACES · SPORTEDGE V6</b>', '',
         f"⚽ <b>{html.escape(names['home'])} — {html.escape(names['away'])}</b>",

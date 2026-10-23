@@ -7,7 +7,7 @@ from urllib.parse import urlsplit
 import httpx
 from integration.config import enabled, secret, bounded
 from integration.database import transaction
-from integration.fixture_links import cached_links, valid_event_url
+from integration.fixture_links import cached_links, valid_event_url, with_sportedge_link
 
 log=logging.getLogger(__name__)
 logging.getLogger('httpx').setLevel(logging.WARNING)
@@ -34,11 +34,13 @@ def format_message(payload):
                     f'El modelo estima aproximadamente {percentage:.0f} de cada 100 situaciones similares.']
             if p.get('calibration_validation_status')=='historical_reused_test_prospective_unverified':
                 lines.append('Estimación experimental pendiente de validación con partidos nuevos.')
-    links=payload.get('fixture_links',{})
+    links=with_sportedge_link(s,payload.get('fixture_links'))
     for provider,label in (('365scores','📱 Ver partido en 365Scores'),('betano','🎯 Abrir mercados en Betano')):
         link=links.get(provider,{}) if isinstance(links,dict) else {}
         if isinstance(link,dict) and valid_event_url(provider,link.get('url'),link.get('event_id')):
             lines+=['',f'<a href="{html.escape(link["url"],quote=True)}">{label}</a>']
+    if 'sportedge' in links:
+        lines+=['',f'<a href="{links["sportedge"]["url"]}">📊 Ver partido en SportEdge</a>']
     lines+=['','🤖 <i>Analytics V6 · experimental</i>']
     if payload.get('source')=='technical_test':
         lines[0]='<b>🧪 PRUEBA TÉCNICA SPORTEDGE V6</b>'
@@ -82,7 +84,7 @@ async def claim(p):
                     links=await cached_links(c,payload['snapshot'])
             except Exception as exc:
                 log.warning('Fixture links omitted: %s',type(exc).__name__)
-            payload['fixture_links']=links
+            payload['fixture_links']=with_sportedge_link(payload['snapshot'],links)
             await c.execute('UPDATE v6.telegram_outbox SET payload=$2 WHERE outbox_id=$1',row['outbox_id'],payload)
             return dict(row) | {'payload':payload}
         return None

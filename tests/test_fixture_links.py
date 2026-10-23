@@ -51,6 +51,27 @@ def test_lima_day_and_2am_schedule(monkeypatch):
     assert link_worker.due_day(links.instant('2026-10-11T08:15:00Z'))==DAY
 
 
+@pytest.mark.parametrize('fixture_id',[19713074,'19713074'])
+def test_sportedge_route_uses_exact_source_fixture(fixture_id):
+    assert links.sportedge_match_url(fixture_id)=='https://portal.sportedge.online/matches/19713074'
+
+
+@pytest.mark.parametrize('fixture_id',[None,True,False,0,-1,19713074.0,'19713074/evil','../19713074',' 19713074','9223372036854775808'])
+def test_sportedge_rejects_invalid_fixture_ids(fixture_id):
+    assert links.sportedge_match_url(fixture_id) is None
+
+
+def test_sportedge_is_available_without_cache_and_overrides_supplied_url():
+    s={'id':19713074}
+    supplied={'sportedge':{'url':'https://attacker.invalid/matches/999'}}
+    result=links.with_sportedge_link(s,supplied)
+    assert result['sportedge']['url']=='https://portal.sportedge.online/matches/19713074'
+    assert supplied['sportedge']['url']=='https://attacker.invalid/matches/999'
+    message=telegram.format_message({'snapshot':s,'prediction':{},'fixture_links':None})
+    assert 'https://portal.sportedge.online/matches/19713074' in message
+    assert 'Ver partido en SportEdge' in message
+
+
 def test_unique_match_requires_teams_league_country_kickoff():
     index=links.event_index([event()])
     assert links.resolve(fixture(),index)['status']=='matched'
@@ -196,6 +217,7 @@ def test_alert_links_survive_all_telegram_formats():
         method,body=telegram.request_body(p,'test-chat')
         text=body.get('text') or body.get('caption') or body['media'][0]['caption']
         assert 'Ver partido en 365Scores' in text and 'Abrir mercados en Betano' in text
+        assert 'https://portal.sportedge.online/matches/1001' in text
         assert 'href="https://' in text
     p['fixture_links']['betano']['url']='https://attacker.invalid'
     assert 'Abrir mercados en Betano' not in telegram.format_message(p)
@@ -207,7 +229,7 @@ def run_db(fn):
         p=await pool()
         try:
             async with p.acquire() as c:
-                await c.execute('TRUNCATE v6.fixture_link_registry,v6.fixture_link_catalogues,v6.fixture_link_aliases,v6.fixture_link_runs')
+                await c.execute('TRUNCATE v6.fixture_link_registry,v6.fixture_link_catalogues,v6.fixture_link_aliases,v6.fixture_link_runs,v6.fixture_link_catalogue_requests')
             await fn(p)
         finally:await p.close()
     asyncio.run(case())
@@ -235,6 +257,7 @@ def test_web_catalogue_publish_preserves_started_events_and_operator_imports():
 
 
 def test_builder_bulk_cache_expiry_identity_and_retry(monkeypatch):
+    monkeypatch.setenv('V6_BETANO_CATALOGUE_URL','https://www.betano.pe/test-feed')
     today=datetime.now(timezone.utc).astimezone(ZoneInfo('America/Lima')).date()
     kickoff=links.day_bounds(today)[0]+timedelta(hours=12)
     async def source(day):
@@ -285,6 +308,7 @@ def test_imported_catalogues_no_http_and_source_duplicates_are_ambiguous(monkeyp
 
 
 def test_provider_failure_preserves_valid_cache_and_changed_identity_invalidates(monkeypatch):
+    monkeypatch.setenv('V6_BETANO_CATALOGUE_URL','https://www.betano.pe/test-feed')
     today=datetime.now(timezone.utc).astimezone(ZoneInfo('America/Lima')).date()
     kickoff=links.day_bounds(today)[0]+timedelta(hours=12)
     fixtures=[fixture(kickoff.isoformat())]
@@ -361,6 +385,7 @@ def test_telegram_delivery_preserves_both_cached_links(monkeypatch,mode):
             text=body['media'][0]['caption'] if method=='sendMediaGroup' else body.get('caption',body.get('text'))
             assert body['chat_id']=='test-chat'
             assert all(f'href="{e["url"]}"' in text for e in expected.values())
+            assert f'href="https://portal.sportedge.online/matches/{s["id"]}"' in text
             if mode=='fallback' and len(methods)==1:
                 return httpx.Response(400,json={'ok':False})
             messages=[{'message_id':301},{'message_id':302}] if method=='sendMediaGroup' else {'message_id':303}
@@ -371,7 +396,8 @@ def test_telegram_delivery_preserves_both_cached_links(monkeypatch,mode):
         async with p.acquire() as c:
             row=await c.fetchrow('SELECT * FROM v6.telegram_outbox')
         assert row['status']=='sent' and row['payload']['snapshot']==s
-        assert set(row['payload']['fixture_links'])==set(links.PROVIDERS)
+        assert set(row['payload']['fixture_links'])==set(links.PROVIDERS)|{'sportedge'}
+        assert row['payload']['fixture_links']['sportedge']['url']==f'https://portal.sportedge.online/matches/{s["id"]}'
         assert all(row['payload']['fixture_links'][provider]['url']==e['url'] for provider,e in expected.items())
         assert methods=={'text':['sendMessage'],'photo':['sendPhoto'],
             'album':['sendMediaGroup'],'fallback':['sendMediaGroup','sendMessage']}[mode]
@@ -390,7 +416,9 @@ def test_cache_query_failure_does_not_cancel_outbox_claim(monkeypatch):
         s=snapshot();job,_=await repo.submit(p,s);j=await repo.claim(p,job);r=result(j)
         await repo.complete(p,j,r,{'snapshot':s,'prediction':r})
         row=await telegram.claim(p)
-        assert row and row['status']=='sending' and row['payload']['fixture_links']=={}
+        assert row and row['status']=='sending'
+        assert set(row['payload']['fixture_links'])=={'sportedge'}
+        assert row['payload']['fixture_links']['sportedge']['url']==f'https://portal.sportedge.online/matches/{s["id"]}'
     run_db(case)
 
 

@@ -2,10 +2,10 @@ name: sportedge-v6
 x-link-schedule: &link-schedule
   V6_LINK_BUILD_HOUR: ${V6_LINK_BUILD_HOUR:-2}
   V6_LINK_BUILD_MINUTE: ${V6_LINK_BUILD_MINUTE:-0}
-  V6_LINK_REFRESH_SECONDS: ${V6_LINK_REFRESH_SECONDS:-21600}
+  V6_LINK_REFRESH_SECONDS: ${V6_LINK_REFRESH_SECONDS:-7200}
 x-runtime: &runtime
   build: .
-  image: sportedge-integration-v6:1.2.0
+  image: sportedge-integration-v6:1.3.0
   init: true
   restart: unless-stopped
   cpus: 0.25
@@ -145,7 +145,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.links-web
-    image: sportedge-v6-betano-web:1.2.0
+    image: sportedge-v6-betano-web:1.3.0
     command: [python,-m,integration.betano_web]
     cpus: 0.5
     mem_limit: 768m
