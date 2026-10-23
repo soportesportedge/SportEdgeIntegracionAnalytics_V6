@@ -54,7 +54,7 @@ El worker usa `FOR UPDATE SKIP LOCKED`, lease de 60 segundos y token de propieda
 
 ## Telegram de pruebas V6
 
-La integración 1.3.0 mantiene el registro diario de enlaces de 365Scores y Betano y añade ciclos incrementales cada dos horas, con ventanas de inicio y solicitudes persistidas para el navegador. Telegram incorpora los enlaces exactos y vigentes del registro local, además del enlace directo de SportEdge. [Configuración, contrato, endpoints y límites de acceso/app](docs/FIXTURE_LINKS.md).
+La integración 1.3.1 mantiene el registro diario de enlaces de 365Scores y Betano y añade ciclos incrementales cada dos horas, con ventanas de inicio y solicitudes persistidas para el navegador. Los ciclos posteriores siguen siendo incrementales aunque el intento diario haya fallado. Telegram incorpora los enlaces exactos y vigentes del registro local, además del enlace directo de SportEdge. [Configuración, contrato, endpoints y límites de acceso/app](docs/FIXTURE_LINKS.md).
 
 La familia predeterminada es ahora `logistic`, versión `P15_logistic_002_20261011_recent_cal1`. El resultado registra score original, probabilidad ajustada, versión del calibrador, umbral equivalente y regla de decisión. El integrador verifica SHA/versiones y selecciona con score >= 0,608364981863603; no confunde el umbral con la escala calibrada. La migración 003 añade columnas de metadatos a la instancia V6. Telegram identifica el ajuste histórico y mantiene el aviso experimental. [Comparación, protocolo y reversión](docs/PRECISION15_RELEASE.md).
 

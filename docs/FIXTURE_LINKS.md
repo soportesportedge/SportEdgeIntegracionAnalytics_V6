@@ -2,7 +2,7 @@
 
 El módulo `v6.fixture_catalogues` prepara un registro local de enlaces de los catálogos públicos disponibles. A las **02:00 de Perú (`America/Lima`)** intenta resolver **todos los partidos programados para el día**. Los siguientes ciclos son **cada dos horas** (04:00, 06:00, …, 22:00 y 00:00) y seleccionan únicamente enlaces no resueltos por proveedor cuya hora de inicio esté entre **ahora menos una hora y ahora más dos horas**, incluidos los límites. Los enlaces válidos de un proveedor no se repiten aunque el otro siga pendiente. Se omiten partidos fuera de la ventana y se conserva el registro ya resuelto.
 
-Los horarios se anclan a las 02:00 y no a la hora de finalización del lote, por lo que no acumulan retraso. El ciclo revisa pendientes cada minuto. Tras reiniciar recupera el ciclo actual; si falta la carga completa del día después de las 02:00, la recupera antes de los incrementales. El ciclo de medianoche contempla tanto los encuentros recientes del día anterior como los próximos del nuevo día y no sustituye la carga completa de las 02:00.
+Los horarios se anclan a las 02:00 y no a la hora de finalización del lote, por lo que no acumulan retraso. El ciclo revisa pendientes cada minuto. Tras reiniciar recupera el ciclo actual; si aún no se intentó la carga completa del día después de las 02:00, recupera ese primer intento. Si el lote diario falló, los reintentos técnicos dentro del mismo ciclo pueden completarlo, pero los ciclos posteriores siguen siendo incrementales y respetan la ventana. El ciclo de medianoche contempla tanto los encuentros recientes del día anterior como los próximos del nuevo día y no sustituye la carga completa de las 02:00.
 
 ## Servicios independientes
 
@@ -59,7 +59,7 @@ docker compose --profile links --profile links-web up -d --no-deps --build api l
 docker compose --profile telegram up -d --no-deps --build telegram-worker
 ```
 
-Migraciones del componente: `004_fixture_links.sql` (catálogos y registro), `005_fixture_link_mls_aliases.sql` (equivalencias MLS verificadas) y `006_incremental_fixture_links.sql` (progreso de cargas completas/ciclos y solicitudes del navegador). La migración 006 reconoce las cargas completas exitosas de la versión anterior para no repetirlas al actualizar. Aplicar migraciones antes de actualizar los dos servicios de catálogos. Se usa PostgreSQL V6; las migraciones previas, el modelo y su umbral se conservan.
+Migraciones del componente: `004_fixture_links.sql` (catálogos y registro), `005_fixture_link_mls_aliases.sql` (equivalencias MLS verificadas), `006_incremental_fixture_links.sql` (progreso de cargas completas/ciclos y solicitudes del navegador) y `007_fixture_link_daily_attempt.sql` (intento diario separado de su éxito). La actualización reconoce las cargas completas previas para no repetirlas. Aplicar migraciones antes de actualizar los dos servicios de catálogos. Se usa PostgreSQL V6; las migraciones previas, el modelo y su umbral se conservan.
 
 ## Validación
 

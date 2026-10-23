@@ -161,17 +161,22 @@ async def build_day(p,client,day,force=False,*,now=None,scheduled=False):
             for provider in providers:
                 previous=runs.get(provider)
                 requested=previous and previous['last_error'] in ('rebuild_requested','catalogue_imported_rebuild_pending')
-                daily_complete=previous and previous['full_completed_at'] and previous['full_completed_at']>=daily_start_at(day)
+                attempted_at=previous and (previous['full_attempted_at'] or previous['full_completed_at'])
+                daily_attempted=attempted_at and attempted_at>=daily_start_at(day)
+                retry_full=(previous and previous['mode']=='full' and previous['status']!='completed'
+                            and previous['slot_at']==slot)
                 full=(force or requested or (not scheduled and previous is None)
-                      or (day==due_day(now) and not daily_complete))
+                      or retry_full or (day==due_day(now) and not daily_attempted))
                 mode='full' if full else 'incremental'
                 async with p.acquire() as c:
                     rows=await c.fetch('SELECT * FROM v6.fixture_link_registry WHERE match_day=$1 AND provider=$2',day,provider)
                     selected=select_fixtures(fixtures or [],rows,mode,now)
-                    await c.execute('''INSERT INTO v6.fixture_link_runs(match_day,provider,status)
-                        VALUES ($1,$2,'running') ON CONFLICT(match_day,provider) DO UPDATE SET status='running',
+                    await c.execute('''INSERT INTO v6.fixture_link_runs(match_day,provider,status,mode,slot_at,full_attempted_at)
+                        VALUES ($1,$2,'running',$4,$3,CASE WHEN $4='full' THEN $5::timestamptz END)
+                        ON CONFLICT(match_day,provider) DO UPDATE SET status='running',mode=EXCLUDED.mode,
                         attempts=CASE WHEN v6.fixture_link_runs.slot_at=$3 THEN v6.fixture_link_runs.attempts+1 ELSE 1 END,
-                        started_at=now(),finished_at=NULL,next_attempt_at=now()+interval '15 minutes' ''',day,provider,slot)
+                        slot_at=$3,full_attempted_at=CASE WHEN $4='full' THEN $5 ELSE v6.fixture_link_runs.full_attempted_at END,
+                        started_at=now(),finished_at=NULL,next_attempt_at=now()+interval '15 minutes' ''',day,provider,slot,mode,now)
                 events = None
                 origin = None
                 error = source_error

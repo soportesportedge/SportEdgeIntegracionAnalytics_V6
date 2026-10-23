@@ -223,3 +223,26 @@ def test_stale_browser_response_cannot_replace_new_request():
             assert await c.fetchval('SELECT count(*) FROM v6.fixture_link_catalogues')==0
             assert await c.fetchval('SELECT status FROM v6.fixture_link_catalogue_requests')=='pending'
     run_db(case)
+
+
+def test_failed_daily_batch_retries_only_nearby_fixtures_in_next_slot(monkeypatch):
+    monkeypatch.setenv('V6_BETANO_CATALOGUE_URL','https://www.betano.pe/test-feed')
+    day=datetime.now(ZoneInfo('America/Lima')).date()
+    nearby=fixture(local(day,5).isoformat())
+    distant=fixture(local(day,20).isoformat(),fixture_id=1002,home='Distant')
+    async def source(requested):return [nearby,distant]
+    monkeypatch.setattr(link_worker,'source_fixtures',source)
+    async def case(p):
+        async with httpx.AsyncClient(transport=httpx.MockTransport(lambda request:httpx.Response(503))) as client:
+            first=await link_worker.build_day(p,client,day,now=local(day,2),scheduled=True)
+            assert all(v['mode']=='full' and v['candidates']==2 and v['error']=='catalogue_http_503' for v in first.values())
+            def handler(request):
+                provider='betano' if 'betano' in request.url.host else '365scores'
+                return httpx.Response(200,json={'match_day':str(day),'events':[event(provider,starting_at=nearby['starting_at'].isoformat())]})
+            async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as recovered:
+                second=await link_worker.build_day(p,recovered,day,now=local(day,4),scheduled=True)
+                assert all(v['mode']=='incremental' and v['candidates']==1 and v['matched']==1 for v in second.values())
+            async with p.acquire() as c:
+                assert await c.fetchval('SELECT count(*) FROM v6.fixture_link_runs WHERE full_completed_at IS NULL AND full_attempted_at IS NOT NULL')==2
+                assert await c.fetchval("SELECT count(*) FROM v6.fixture_link_registry WHERE fixture_id=1002 AND status='provider_error'")==2
+    run_db(case)

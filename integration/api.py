@@ -26,7 +26,7 @@ async def lifespan(app):
     await app.state.http.aclose()
     await app.state.pool.close()
 
-app=FastAPI(title='SportEdge V6 Integration',version='1.3.0',lifespan=lifespan,
+app=FastAPI(title='SportEdge V6 Integration',version='1.3.1',lifespan=lifespan,
     openapi_tags=[{'name':'Catálogos diarios de partidos',
         'description':'Módulo v6.fixture_catalogues: programación, cobertura y registros locales. La descarga se ejecuta en servicios independientes.'}])
 
